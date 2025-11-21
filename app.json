@@ -12,7 +12,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.krunalinfynno.ExpoPilot",
       "infoPlist": {
-        "UIViewControllerBasedStatusBarAppearance": true,
+        "UIViewControllerBasedStatusBarAppearance": false,
         "UIDesignRequiresCompatibility": true
       }
     },

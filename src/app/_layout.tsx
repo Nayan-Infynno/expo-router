@@ -1,22 +1,20 @@
-import React from "react";
+import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 
-import { Stack } from "expo-router";
-import { useColorScheme } from "react-native";
-
-const _layout = () => {
-  const colorScheme = useColorScheme();
+export default function TabLayout() {
   return (
-    <Stack
-      screenOptions={{
-        statusBarStyle: colorScheme === "dark" ? "light" : "dark",
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="(auth)/signin" />
-      <Stack.Screen name="(auth)/signup" />
-      <Stack.Screen name="(drawer)/" options={{ headerShown: false }} />
-    </Stack>
+    <NativeTabs>
+      <NativeTabs.Trigger name="home">
+        <Label>Home</Label>
+        <Icon sf="house.fill" drawable="custom_android_drawable" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="basic">
+        <Label>Basic</Label>
+        <Icon sf="laser.burst" drawable="custom_android_drawable" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="settings" role="search">
+        <Icon sf="gear" drawable="custom_settings_drawable" />
+        <Label>Settings</Label>
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
-};
-
-export default _layout;
+}
