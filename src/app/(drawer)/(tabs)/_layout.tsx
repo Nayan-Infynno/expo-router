@@ -4,6 +4,7 @@ import { Text, useColorScheme } from "react-native";
 import { HapticTab } from "@/src/components/haptic-tab";
 import { useThemeColor } from "@/src/hooks/use-theme-color";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Tabs } from "expo-router";
 
 const TabLayout = () => {
@@ -32,6 +33,12 @@ const TabLayout = () => {
         },
         headerTintColor: textColor,
         headerBackButtonDisplayMode: "minimal",
+        headerLeft: ({ tintColor }) => (
+          <DrawerToggleButton
+            tintColor={colorScheme === "dark" ? "#fff" : textColor}
+            pressOpacity={0.8}
+          />
+        ),
       }}
     >
       <Tabs.Screen

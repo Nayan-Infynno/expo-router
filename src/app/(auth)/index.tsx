@@ -19,7 +19,7 @@ const Splash = () => {
       setIsLoading(true);
       const isSignedIn = await AsyncStorage.getItem("isSignedIn");
       if (isSignedIn === "true") {
-        router.replace("/(tabs)");
+        router.replace("/(drawer)/(tabs)");
       }
     } catch (error) {
       console.log(error);

@@ -11,7 +11,8 @@ const SignIn = () => {
   const goToHomeHandler = async () => {
     try {
       await AsyncStorage.setItem("isSignedIn", "true");
-      router.replace("/(tabs)");
+      // router.replace("/(tabs)");
+      router.replace("/(drawer)");
     } catch (error) {
       console.log(error);
     }
