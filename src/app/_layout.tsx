@@ -15,6 +15,7 @@ const _layout = () => {
       <Stack.Screen name="(auth)/signin" />
       <Stack.Screen name="(auth)/signup" />
       <Stack.Screen name="(tabs)/" />
+      <Stack.Screen name="product" />
     </Stack>
   );
 };

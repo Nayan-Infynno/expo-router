@@ -1,8 +1,9 @@
+import React from "react";
+import { StyleSheet } from "react-native";
+
 import { ThemedText } from "@/src/components/themed-text";
 import { ThemedView } from "@/src/components/themed-view";
 import { Link } from "expo-router";
-import React from "react";
-import { StyleSheet } from "react-native";
 
 const Home = () => {
   return (

@@ -3,10 +3,12 @@ import { ThemedView } from "@/src/components/themed-view";
 import { Slot } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const SlotLayout = () => {
+  const insets = useSafeAreaInsets();
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { paddingBottom: insets.bottom }]}>
       <ThemedView style={styles.headerContainer}>
         <ThemedText>Header</ThemedText>
       </ThemedView>

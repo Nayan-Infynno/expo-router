@@ -17,7 +17,7 @@ const List = () => {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container]}>
       <ThemedText>List Screen</ThemedText>
       <Link href={"/list/12"}>
         <ThemedText>List Details 1</ThemedText>
