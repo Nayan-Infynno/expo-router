@@ -15,7 +15,7 @@ const TabLayout = () => {
 
   return (
     <Tabs
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarActiveTintColor: backgroundColor,
         headerShown: true,
         tabBarButton: HapticTab,
@@ -33,136 +33,78 @@ const TabLayout = () => {
         },
         headerTintColor: textColor,
         headerBackButtonDisplayMode: "minimal",
-        headerLeft: ({ tintColor }) => (
+        tabBarIcon: ({ focused, color }) => {
+          let iconName;
+
+          if (route.name === "index")
+            iconName = focused ? "home-variant" : "home-variant-outline";
+          else if (route.name === "assistant")
+            iconName = focused ? "clipboard-list" : "clipboard-list-outline";
+          else if (route.name === "chat")
+            iconName = focused ? "message-reply" : "message-reply-outline";
+          else if (route.name === "history")
+            iconName = focused
+              ? "file-star-four-points"
+              : "file-star-four-points-outline";
+          else if (route.name === "profile")
+            iconName = focused ? "account" : "account-outline";
+
+          return (
+            <MaterialCommunityIcons name={iconName} size={24} color={color} />
+          );
+        },
+        tabBarLabel: ({ color, focused }) => (
+          <Text
+            style={{
+              color: colorScheme === "dark" && focused ? "#fff" : color,
+              fontSize: 12,
+              fontWeight: focused ? "bold" : "normal",
+            }}
+          >
+            {route.name === "index"
+              ? "Home"
+              : route.name.split("")[0].toUpperCase() + route.name.slice(1)}
+          </Text>
+        ),
+        headerLeft: () => (
           <DrawerToggleButton
             tintColor={colorScheme === "dark" ? "#fff" : textColor}
             pressOpacity={0.8}
           />
         ),
-      }}
+      })}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "home-variant" : "home-variant-outline"}
-              size={24}
-              color={colorScheme === "dark" && focused ? "#fff" : color}
-            />
-          ),
-          tabBarLabel: ({ color, focused }) => (
-            <Text
-              style={{
-                color: colorScheme === "dark" && focused ? "#fff" : color,
-                fontSize: 12,
-                fontWeight: focused ? "bold" : "normal",
-              }}
-            >
-              Home
-            </Text>
-          ),
         }}
       />
       <Tabs.Screen
         name="assistant"
         options={{
           title: "Assistant",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "clipboard-list" : "clipboard-list-outline"}
-              size={24}
-              color={colorScheme === "dark" && focused ? "#fff" : color}
-            />
-          ),
-          tabBarLabel: ({ color, focused }) => (
-            <Text
-              style={{
-                color: colorScheme === "dark" && focused ? "#fff" : color,
-                fontSize: 12,
-                fontWeight: focused ? "bold" : "normal",
-              }}
-            >
-              Assistant
-            </Text>
-          ),
         }}
       />
       <Tabs.Screen
         name="chat"
-        options={{
-          title: "Chat",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "message-reply" : "message-reply-outline"}
-              size={24}
-              color={colorScheme === "dark" && focused ? "#fff" : color}
-            />
-          ),
-          tabBarLabel: ({ color, focused }) => (
-            <Text
-              style={{
-                color: colorScheme === "dark" && focused ? "#fff" : color,
-                fontSize: 12,
-                fontWeight: focused ? "bold" : "normal",
-              }}
-            >
-              Chat
-            </Text>
-          ),
+        options={({ route }: any) => {
+          return {
+            title: "Chat",
+            tabBarBadge: route?.params?.tabBarBadge ?? undefined,
+          };
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: "History",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={
-                focused
-                  ? "file-star-four-points"
-                  : "file-star-four-points-outline"
-              }
-              size={24}
-              color={colorScheme === "dark" && focused ? "#fff" : color}
-            />
-          ),
-          tabBarLabel: ({ color, focused }) => (
-            <Text
-              style={{
-                color: colorScheme === "dark" && focused ? "#fff" : color,
-                fontSize: 12,
-                fontWeight: focused ? "bold" : "normal",
-              }}
-            >
-              History
-            </Text>
-          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons
-              name={focused ? "account" : "account-outline"}
-              size={24}
-              color={colorScheme === "dark" && focused ? "#fff" : color}
-            />
-          ),
-          tabBarLabel: ({ color, focused }) => (
-            <Text
-              style={{
-                color: colorScheme === "dark" && focused ? "#fff" : color,
-                fontSize: 12,
-                fontWeight: focused ? "bold" : "normal",
-              }}
-            >
-              Profile
-            </Text>
-          ),
         }}
       />
     </Tabs>
