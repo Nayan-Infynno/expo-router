@@ -9,7 +9,12 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.krunalinfynno.ExpoPilot",
+      "infoPlist": {
+        "UIViewControllerBasedStatusBarAppearance": true,
+        "UIDesignRequiresCompatibility": true
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,14 +24,14 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.krunalinfynno.ExpoPilot"
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
       [
         "expo-splash-screen",
         {
@@ -38,11 +43,23 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-router",
+        {
+          "root": "./src/app"
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5377f7c7-0a06-4040-9199-b13423b31835"
+      }
     }
   }
 }
