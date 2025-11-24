@@ -9,14 +9,13 @@ import { Tabs } from "expo-router";
 
 const TabLayout = () => {
   const colorScheme = useColorScheme();
-  const backgroundColor = useThemeColor({}, "dropDownColor");
   const headerBackgroundColor = useThemeColor({}, "backgroundColor");
   const textColor = useThemeColor({}, "textColor");
 
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: backgroundColor,
+        tabBarActiveTintColor: textColor,
         headerShown: true,
         tabBarButton: HapticTab,
         tabBarStyle: {
