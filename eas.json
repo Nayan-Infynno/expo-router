@@ -8,20 +8,12 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "BASE_URL": "https://api.dev-expo-pilot.com/v1",
-        "SOCKET_URL": "https://api.dev-expo-pilot.com/ws",
-        "WEB_CLIENT_ID_GOOGLE": "",
-        "GOOGLE_PLACES_API_KEY": "",
-        "SENTRY_URL": ""
+        "APP_VARIANT": "development"
       }
     },
     "developmentBuild": {
       "env": {
-        "BASE_URL": "https://api.dev-expo-pilot.com/v1",
-        "SOCKET_URL": "https://api.dev-expo-pilot.com/ws",
-        "WEB_CLIENT_ID_GOOGLE": "",
-        "GOOGLE_PLACES_API_KEY": "",
-        "SENTRY_URL": ""
+        "APP_VARIANT": "developmentBuild"
       },
       "android": {
         "buildType": "apk"
@@ -29,11 +21,7 @@
     },
     "stagingBuild": {
       "env": {
-        "BASE_URL": "https://api.staging-expo-pilot.com/v1",
-        "SOCKET_URL": "https://api.staging-expo-pilot.com/ws",
-        "WEB_CLIENT_ID_GOOGLE": "",
-        "GOOGLE_PLACES_API_KEY": "",
-        "SENTRY_URL": ""
+        "APP_VARIANT": "stagingBuild"
       },
       "android": {
         "buildType": "apk"
@@ -41,22 +29,14 @@
     },
     "productionBuild": {
       "env": {
-        "BASE_URL": "https://api.expo-pilot.com/v1",
-        "SOCKET_URL": "https://api.expo-pilot.com/ws",
-        "WEB_CLIENT_ID_GOOGLE": "",
-        "GOOGLE_PLACES_API_KEY": "",
-        "SENTRY_URL": ""
+        "APP_VARIANT": "productionBuild"
       },
       "autoIncrement": true
     },
     "productionBundle": {
       "autoIncrement": true,
       "env": {
-        "BASE_URL": "https://api.expo-pilot.com/v1/",
-        "SOCKET_URL": "https://api.expo-pilot.com/ws",
-        "WEB_CLIENT_ID_GOOGLE": "",
-        "GOOGLE_PLACES_API_KEY": "",
-        "SENTRY_URL": ""
+        "APP_VARIANT": "productionBundle"
       },
       "android": {
         "buildType": "app-bundle"

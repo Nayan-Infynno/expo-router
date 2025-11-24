@@ -19,7 +19,8 @@
     "easStagingBuild": "eas build --profile android --platform stagingBuild",
     "easProductionBuild": "eas build --profile android --platform productionBuild",
     "easProductionBundle": "eas build --profile android --platform productionBundle",
-    "startTanner": "npx expo start --dev-client --tunnel --clear"
+    "startTanner": "npx expo start --dev-client --tunnel --clear",
+    "dev": "APP_VARIANT=development npx expo start"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -31,6 +32,7 @@
     "@react-navigation/native": "^7.1.8",
     "expo": "~54.0.23",
     "expo-constants": "~18.0.10",
+    "expo-dev-client": "~6.0.18",
     "expo-font": "~14.0.9",
     "expo-haptics": "~15.0.7",
     "expo-image": "~3.0.10",
