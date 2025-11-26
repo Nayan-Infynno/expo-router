@@ -1,9 +1,11 @@
 {
-  "platforms": ["apple", "android", "web"],
+  "platforms": ["apple", "android"],
   "apple": {
     "modules": ["ExpoBackgroundTaskManagerModule"]
   },
   "android": {
-    "modules": ["expo.modules.backgroundtaskmanager.ExpoBackgroundTaskManagerModule"]
+    "modules": [
+      "expo.modules.backgroundtaskmanager.ExpoBackgroundTaskManagerModule"
+    ]
   }
 }

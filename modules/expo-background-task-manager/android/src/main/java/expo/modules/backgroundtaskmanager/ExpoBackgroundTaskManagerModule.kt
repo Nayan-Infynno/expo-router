@@ -1,50 +1,51 @@
 package expo.modules.backgroundtaskmanager
 
+import android.content.Intent
+import android.os.Build
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.net.URL
 
 class ExpoBackgroundTaskManagerModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
+
   override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoBackgroundTaskManager')` in JavaScript.
     Name("ExpoBackgroundTaskManager")
 
-    // Defines constant property on the module.
-    Constant("PI") {
-      Math.PI
-    }
+    // START SERVICE
+    AsyncFunction("start") { options: Map<String, Any> ->
+      val ctx = appContext.reactContext ?: throw Exception("No context")
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
-
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
-    }
-
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
-    }
-
-    // Enables the module to be used as a native view. Definition components that are accepted as part of
-    // the view definition: Prop, Events.
-    View(ExpoBackgroundTaskManagerView::class) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { view: ExpoBackgroundTaskManagerView, url: URL ->
-        view.webView.loadUrl(url.toString())
+      val intent = Intent(ctx, BackgroundForegroundService::class.java).apply {
+        putExtra("title", options["title"] as? String ?: "Running")
+        putExtra("message", options["message"] as? String ?: "Background task running")
+        putExtra("interval", (options["interval"] as? Double ?: 2000.0).toLong())
       }
-      // Defines an event that the view can send to JavaScript.
-      Events("onLoad")
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        ctx.startForegroundService(intent)
+      } else {
+        ctx.startService(intent)
+      }
+      true
+    }
+
+    // STOP SERVICE
+    AsyncFunction("stop") {
+      val ctx = appContext.reactContext ?: throw Exception("No context")
+      val intent = Intent(ctx, BackgroundForegroundService::class.java)
+      ctx.stopService(intent)
+      true
+    }
+
+    // UPDATE NOTIFICATION
+    AsyncFunction("updateNotification") { options: Map<String, Any> ->
+      val ctx = appContext.reactContext ?: throw Exception("No context")
+
+      BackgroundForegroundService.updateNotificationFromJS(
+        ctx,
+        options["title"] as? String ?: "Updated Title",
+        options["message"] as? String ?: "Updated Message"
+      )
+      true
     }
   }
 }

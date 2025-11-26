@@ -1,12 +1,22 @@
-import { NativeModule, requireNativeModule } from 'expo';
+import { NativeModule, requireNativeModule } from "expo";
 
-import { ExpoBackgroundTaskManagerModuleEvents } from './ExpoBackgroundTaskManager.types';
-
-declare class ExpoBackgroundTaskManagerModule extends NativeModule<ExpoBackgroundTaskManagerModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
+export interface StartOptions {
+  title?: string;
+  message?: string;
+  interval?: number; // milliseconds
 }
 
-// This call loads the native module object from the JSI.
-export default requireNativeModule<ExpoBackgroundTaskManagerModule>('ExpoBackgroundTaskManager');
+export interface UpdateNotificationOptions {
+  title?: string;
+  message?: string;
+}
+
+declare class ExpoBackgroundTaskManagerModule extends NativeModule {
+  start(options: StartOptions): Promise<boolean>;
+  stop(): Promise<boolean>;
+  updateNotification(options: UpdateNotificationOptions): Promise<boolean>;
+}
+
+export default requireNativeModule<ExpoBackgroundTaskManagerModule>(
+  "ExpoBackgroundTaskManager"
+);

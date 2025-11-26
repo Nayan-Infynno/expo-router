@@ -19,7 +19,9 @@
     "easStagingBuild": "eas build --profile android --platform stagingBuild",
     "easProductionBuild": "eas build --profile android --platform productionBuild",
     "easProductionBundle": "eas build --profile android --platform productionBundle",
-    "startTanner": "npx expo start --dev-client --tunnel --clear"
+    "startTanner": "npx expo start --dev-client --tunnel --clear",
+    "androidPrebuild": "npx expo prebuild -p android --clean",
+    "iosPrebuild": "npx expo prebuild -p ios --clean"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
