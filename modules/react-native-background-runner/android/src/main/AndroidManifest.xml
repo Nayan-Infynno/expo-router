@@ -1,0 +1,46 @@
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <!-- REQUIRED when using android:foregroundServiceType="dataSync" -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+  <!-- General foreground service permission -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"
+      tools:ignore="ManifestOrder" />
+
+  <!-- REQUIRED on Android 13+ for alarms -->
+  <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+  <!-- Recommended -->
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+  <!-- Prevent battery restrictions -->
+  <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+  <application>
+
+    <!-- Foreground Service (background runner) -->
+    <service
+      android:name=".BackgroundRunnerService"
+      android:enabled="true"
+      android:exported="false"
+      android:foregroundServiceType="dataSync"
+      tools:ignore="ForegroundServicePermission" />
+
+    <!-- Headless JS Task Service -->
+    <service
+      android:name=".BackgroundRunnerTaskService"
+      android:enabled="true"
+      android:exported="false" />
+
+    <!-- Daily Schedule Alarm Receiver -->
+    <receiver
+      android:name=".BackgroundAlarmReceiver"
+      android:enabled="true"
+      android:exported="false" />
+
+  </application>
+
+</manifest>

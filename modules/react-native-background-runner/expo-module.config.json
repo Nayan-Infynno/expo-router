@@ -1,0 +1,11 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["ReactNativeBackgroundRunnerModule"]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.backgroundrunner.ReactNativeBackgroundRunnerModule"
+    ]
+  }
+}

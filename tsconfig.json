@@ -12,6 +12,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "src/types/images.d.ts"
+    "src/types/images.d.ts",
+    "modules/react-native-background-runner/src/ReactNativeBackgroundRunner.types.ts"
   ]
 }

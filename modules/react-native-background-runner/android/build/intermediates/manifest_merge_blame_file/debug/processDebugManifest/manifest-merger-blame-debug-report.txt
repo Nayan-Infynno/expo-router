@@ -1,0 +1,77 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    xmlns:tools="http://schemas.android.com/tools"
+4    package="expo.modules.backgroundrunner" >
+5
+6    <uses-sdk android:minSdkVersion="24" />
+7
+8    <!-- REQUIRED when using android:foregroundServiceType="dataSync" -->
+9    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+9-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:3-85
+9-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:20-82
+10
+11    <!-- General foreground service permission -->
+12    <uses-permission
+12-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:3-9:38
+13        android:name="android.permission.FOREGROUND_SERVICE"
+13-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:20-72
+14        tools:ignore="ManifestOrder" />
+14-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:7-35
+15
+16    <!-- REQUIRED on Android 13+ for alarms -->
+17    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+17-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:12:3-77
+17-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:12:20-74
+18
+19    <!-- Recommended -->
+20    <uses-permission android:name="android.permission.WAKE_LOCK" />
+20-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:15:3-66
+20-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:15:20-63
+21
+22    <!-- Prevent battery restrictions -->
+23    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+23-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:18:3-93
+23-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:18:20-90
+24    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+24-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:20:3-79
+24-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:20:20-76
+25
+26    <application>
+26-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:22:3-44:17
+27
+28        <!-- Foreground Service (background runner) -->
+29        <service
+29-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:25:5-30:52
+30            android:name="expo.modules.backgroundrunner.BackgroundRunnerService"
+30-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:26:7-46
+31            android:enabled="true"
+31-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:27:7-29
+32            android:exported="false"
+32-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:28:7-31
+33            android:foregroundServiceType="dataSync"
+33-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:29:7-47
+34            tools:ignore="ForegroundServicePermission" />
+34-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:30:7-49
+35
+36        <!-- Headless JS Task Service -->
+37        <service
+37-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:33:5-36:34
+38            android:name="expo.modules.backgroundrunner.BackgroundRunnerTaskService"
+38-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:34:7-50
+39            android:enabled="true"
+39-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:35:7-29
+40            android:exported="false" />
+40-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:36:7-31
+41
+42        <!-- Daily Schedule Alarm Receiver -->
+43        <receiver
+43-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:39:5-42:34
+44            android:name="expo.modules.backgroundrunner.BackgroundAlarmReceiver"
+44-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:40:7-46
+45            android:enabled="true"
+45-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:41:7-29
+46            android:exported="false" />
+46-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:42:7-31
+47    </application>
+48
+49</manifest>

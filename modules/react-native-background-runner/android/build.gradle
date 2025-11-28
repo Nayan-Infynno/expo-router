@@ -1,0 +1,77 @@
+apply plugin: 'com.android.library'
+
+group = 'expo.modules.backgroundrunner'
+version = '0.7.6'
+
+def expoModulesCorePlugin = new File(project(":expo-modules-core").projectDir.absolutePath, "ExpoModulesCorePlugin.gradle")
+apply from: expoModulesCorePlugin
+applyKotlinExpoModulesCorePlugin()
+useCoreDependencies()
+useExpoPublishing()
+
+// Allow root project to override versions
+def useManagedAndroidSdkVersions = false
+
+if (useManagedAndroidSdkVersions) {
+  useDefaultAndroidSdkVersions()
+} else {
+  buildscript {
+    ext.kotlin_version = '1.9.23'
+    ext.safeExtGet = { prop, fallback ->
+      rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    }
+  }
+  project.android {
+    compileSdkVersion safeExtGet("compileSdkVersion", 36)
+    defaultConfig {
+      minSdkVersion safeExtGet("minSdkVersion", 24)
+      targetSdkVersion safeExtGet("targetSdkVersion", 36)
+    }
+  }
+}
+
+android {
+  namespace "expo.modules.backgroundrunner"
+
+  defaultConfig {
+    versionCode 1
+    versionName "0.7.6"
+
+    // IMPORTANT for Headless JS + Expo modules
+    multiDexEnabled true
+  }
+
+  lintOptions {
+    abortOnError false
+  }
+
+  // Ensure RN maven repo is accessible for compileOnly
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    google()
+    // IMPORTANT: React Native Android AAR (required for HeadlessJsTaskService)
+    maven { url "$rootDir/../node_modules/react-native/android" }
+  }
+}
+
+dependencies {
+  // Expo modules core
+  implementation project(':expo-modules-core')
+
+  // Kotlin stdlib
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+  // IMPORTANT: React Native classes (HeadlessJsTaskService, HeadlessJsTaskConfig)
+  // compileOnly prevents duplicate React Native classes in final APK
+  compileOnly "com.facebook.react:react-native:0.20.1"
+
+  // AndroidX helpers
+  implementation "androidx.core:core-ktx:1.17.0"
+
+  // Work manager (recommended)
+  implementation "androidx.work:work-runtime-ktx:2.11.0"
+
+  // Multidex (needed for larger Dex count due to RN + Expo)
+  implementation 'androidx.multidex:multidex:2.0.1'
+}
