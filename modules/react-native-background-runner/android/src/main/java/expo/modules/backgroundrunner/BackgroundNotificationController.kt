@@ -12,12 +12,8 @@ object BackgroundNotificationController {
   private const val CHANNEL_ID = "background_runner_channel"
   private const val NOTIFICATION_ID = 10001
 
-  // Required to keep builder between updates
   private var builder: NotificationCompat.Builder? = null
 
-  // ---------------------------------------------
-  //   CREATE FOREGROUND NOTIFICATION
-  // ---------------------------------------------
   fun startForegroundNotification(service: Service, options: Map<String, Any>) {
     createNotificationChannel(service)
 
@@ -27,14 +23,13 @@ object BackgroundNotificationController {
     val iconMap = options["taskIcon"] as? Map<*, *>
     val linkingURI = options["linkingURI"] as? String
 
-    // --------------------- INTENT FOR TAP ACTION ---------------------
     val tapIntent = if (linkingURI != null) {
       Intent(Intent.ACTION_VIEW).apply {
         data = android.net.Uri.parse(linkingURI)
         flags = Intent.FLAG_ACTIVITY_NEW_TASK
       }
     } else {
-      Intent(service, javaClass) // fallback
+      Intent(service, service::class.java)
     }
 
     val pendingIntent = PendingIntent.getActivity(
@@ -44,17 +39,16 @@ object BackgroundNotificationController {
       PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 
-    // --------------------- ICON SETUP ---------------------
     val iconRes = resolveIcon(service, iconMap)
 
-    // --------------------- BUILD NOTIFICATION ---------------------
     builder = NotificationCompat.Builder(service, CHANNEL_ID)
       .setContentTitle(title)
       .setContentText(desc)
       .setSmallIcon(iconRes)
       .setContentIntent(pendingIntent)
-      .setOngoing(true)
       .setPriority(NotificationCompat.PRIORITY_MAX)
+      .setOngoing(true)
+      .setAutoCancel(false)
 
     if (colorStr != null) {
       try {
@@ -63,13 +57,14 @@ object BackgroundNotificationController {
     }
 
     val notification = builder!!.build()
+    notification.flags =
+      Notification.FLAG_NO_CLEAR or
+      Notification.FLAG_ONGOING_EVENT or
+      Notification.FLAG_FOREGROUND_SERVICE
 
     service.startForeground(NOTIFICATION_ID, notification)
   }
 
-  // ---------------------------------------------
-  //   UPDATE EXISTING NOTIFICATION
-  // ---------------------------------------------
   fun updateNotification(context: Context, options: Map<String, Any>) {
     if (builder == null) return
 
@@ -96,41 +91,32 @@ object BackgroundNotificationController {
     manager.notify(NOTIFICATION_ID, builder!!.build())
   }
 
-  // ---------------------------------------------
-  //   STOP FOREGROUND NOTIFICATION
-  // ---------------------------------------------
   fun stopForegroundNotification(service: Service) {
     try {
-      service.stopForeground(true)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        // Android 14+ (API 34+)
+        service.stopForeground(Service.STOP_FOREGROUND_REMOVE)
+      } else {
+        @Suppress("DEPRECATION")
+        service.stopForeground(true) // true = remove notification
+      }
 
       val manager = service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
       manager.cancel(NOTIFICATION_ID)
+
     } catch (_: Exception) {}
 
     builder = null
   }
 
-  // ---------------------------------------------
-  //   ICON RESOLVER
-  // ---------------------------------------------
   private fun resolveIcon(context: Context, iconMap: Map<*, *>?): Int {
     if (iconMap == null) return android.R.drawable.ic_popup_sync
-
     val name = iconMap["name"] as? String ?: return android.R.drawable.ic_popup_sync
     val type = iconMap["type"] as? String ?: "mipmap"
-
-    val resId = context.resources.getIdentifier(
-      name,
-      type,
-      context.packageName
-    )
-
+    val resId = context.resources.getIdentifier(name, type, context.packageName)
     return if (resId != 0) resId else android.R.drawable.ic_popup_sync
   }
 
-  // ---------------------------------------------
-  //   CREATE CHANNEL (ANDROID 8+)
-  // ---------------------------------------------
   private fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val channel = NotificationChannel(
@@ -138,6 +124,7 @@ object BackgroundNotificationController {
         "Background Runner",
         NotificationManager.IMPORTANCE_HIGH
       )
+      channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
       val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
       manager.createNotificationChannel(channel)
     }

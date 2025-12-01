@@ -1,10 +1,13 @@
 package expo.modules.backgroundrunner
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import java.util.Calendar
 
 class BackgroundAlarmReceiver : BroadcastReceiver() {
 
@@ -12,24 +15,46 @@ class BackgroundAlarmReceiver : BroadcastReceiver() {
     if (context == null || intent == null) return
 
     try {
-      // Get the dynamic options passed during scheduleDaily()
-      val optionsMap = intent.getSerializableExtra("options") as? HashMap<String, Any>
+      val optionsMap = intent.getSerializableMap("options")
 
-      // Prepare service intent
       val serviceIntent = Intent(context, BackgroundRunnerService::class.java)
-      if (optionsMap != null) {
-        serviceIntent.putExtra("options", optionsMap)
-      }
+      if (optionsMap != null) serviceIntent.putExtra("options", optionsMap)
 
-      // Start foreground service (Android 8+)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         context.startForegroundService(serviceIntent)
       } else {
         context.startService(serviceIntent)
       }
 
+      val hour = intent.getIntExtra("hour", -1)
+      val minute = intent.getIntExtra("minute", -1)
+
+      if (hour >= 0 && minute >= 0) {
+        val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        val next = Calendar.getInstance().apply {
+          add(Calendar.DATE, 1)
+          set(Calendar.HOUR_OF_DAY, hour)
+          set(Calendar.MINUTE, minute)
+          set(Calendar.SECOND, 0)
+        }
+
+        val pi = PendingIntent.getBroadcast(
+          context,
+          9999,
+          intent,
+          PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, next.timeInMillis, pi)
+        } else {
+          am.setExact(AlarmManager.RTC_WAKEUP, next.timeInMillis, pi)
+        }
+      }
+
     } catch (e: Exception) {
-      Log.e("BGAlarmReceiver", "Failed to trigger service: ${e.message}")
+      Log.e("BGAlarmReceiver", "Failed: ${e.message}")
     }
   }
 }

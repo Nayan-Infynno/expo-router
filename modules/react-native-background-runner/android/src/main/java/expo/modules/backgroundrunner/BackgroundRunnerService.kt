@@ -2,6 +2,7 @@ package expo.modules.backgroundrunner
 
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 
@@ -13,19 +14,11 @@ class BackgroundRunnerService : Service() {
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     try {
-      // Get options from JS (startNative)
-      val optionsMap = intent?.getSerializableExtra("options") as? HashMap<String, Any>
+      val optionsMap = intent?.getSerializableMap("options") ?: hashMapOf()
       currentOptions = optionsMap
 
-      if (optionsMap != null) {
-        // start foreground notification
-        BackgroundNotificationController.startForegroundNotification(
-          this,
-          optionsMap
-        )
-      }
+      BackgroundNotificationController.startForegroundNotification(this, optionsMap)
 
-      // Trigger JS callback (onRunningProcess)
       notifyJSCallback()
 
     } catch (e: Exception) {
@@ -35,9 +28,6 @@ class BackgroundRunnerService : Service() {
     return START_STICKY
   }
 
-  // ------------------------------------
-  // JS CALLBACK NOTIFIER
-  // ------------------------------------
   private fun notifyJSCallback() {
     try {
       val module = BackgroundEventEmitter.module ?: return
@@ -45,24 +35,27 @@ class BackgroundRunnerService : Service() {
       val params = currentOptions?.get("parameters") as? Map<String, Any> ?: emptyMap()
 
       BackgroundEventEmitter.fireExecuteEvent(
-        mapOf(
-          "parameters" to params
-        )
+        mapOf("parameters" to params)
       )
-
     } catch (e: Exception) {
       Log.e("BGService", "Event emit failed: ${e.message}")
     }
   }
 
-  // ------------------------------------
-  // STOP SERVICE (called from JS)
-  // ------------------------------------
   override fun onDestroy() {
     try {
       BackgroundNotificationController.stopForegroundNotification(this)
     } catch (_: Exception) {}
 
     super.onDestroy()
+  }
+}
+
+@Suppress("DEPRECATION")
+fun Intent.getSerializableMap(key: String): HashMap<String, Any>? {
+  return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    this.getSerializableExtra(key, HashMap::class.java) as? HashMap<String, Any>
+  } else {
+    this.getSerializableExtra(key) as? HashMap<String, Any>
   }
 }
