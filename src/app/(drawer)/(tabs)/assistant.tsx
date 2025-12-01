@@ -66,8 +66,8 @@ export default function Assistant() {
     try {
       // First register default (headless-style) handler
       BackgroundRunner.registerDefault(onScheduledTask);
-      const hour = 16; // 4 PM India
-      const minute = 52;
+      const hour = 18; // 4 PM India
+      const minute = 41;
 
       await BackgroundRunner.scheduleDaily(hour, minute, {
         taskName: "DailyTask",
@@ -82,7 +82,7 @@ export default function Assistant() {
         },
       });
 
-      alert("Scheduled for today at 4:48 PM!");
+      alert("Scheduled for today at 5:20 PM!");
     } catch (e) {
       console.error("Schedule error", e);
     }
