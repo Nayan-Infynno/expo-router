@@ -1,7 +1,11 @@
 import React from "react";
 
 import { Stack } from "expo-router";
-import { useColorScheme } from "react-native";
+import { AppRegistry, useColorScheme } from "react-native";
+
+const emptyHandler = async () => {};
+
+AppRegistry.registerHeadlessTask("BackgroundRunnerTask", () => emptyHandler);
 
 const _layout = () => {
   const colorScheme = useColorScheme();

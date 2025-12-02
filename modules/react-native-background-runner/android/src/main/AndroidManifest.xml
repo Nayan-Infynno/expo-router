@@ -9,7 +9,12 @@
   <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+
   <application>
+    <meta-data
+        android:name="expo.modules.backgroundrunner.NOTIFICATION_CHANNEL"
+        android:value="background_runner_channel" />
+
     <service
       android:name=".BackgroundRunnerService"
       android:enabled="true"
@@ -25,6 +30,21 @@
     <receiver
       android:name=".BackgroundAlarmReceiver"
       android:enabled="true"
-      android:exported="false" />
+      android:exported="true" />
+
+    <receiver
+        android:name=".BackgroundAutostartReceiver"
+        android:exported="true"
+        tools:ignore="ExportedReceiver">
+
+      <intent-filter>
+        <action android:name="expo.backgroundrunner.RESTART" />
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+      </intent-filter>
+    </receiver>
+
   </application>
 </manifest>

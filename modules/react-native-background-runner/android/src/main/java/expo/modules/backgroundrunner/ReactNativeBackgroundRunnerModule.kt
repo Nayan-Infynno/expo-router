@@ -33,39 +33,39 @@ class ReactNativeBackgroundRunnerModule : Module() {
 
     // START SERVICE WITH AUTO PERMISSIONS + SAFE ORDER
     AsyncFunction("startNative") { options: Map<String, Any> ->
-      val ctx = appContext.reactContext
+      val context = appContext.reactContext
         ?: throw Exception("React context not available")
 
-      val intent = Intent(ctx, BackgroundRunnerService::class.java)
+      BackgroundStorage.lastOptions = options
+
+      val intent = Intent(context, BackgroundRunnerService::class.java)
       intent.putExtra("options", HashMap(options))
 
       try {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-          ctx.startForegroundService(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          ContextCompat.startForegroundService(context, intent)
         } else {
-          ctx.startService(intent)
+          context.startService(intent)
         }
 
         isServiceRunning = true
+        true
 
       } catch (e: Exception) {
-        Log.e("BGRunner", "Failed to start service: $e")
+        Log.e("BGRunner", "startNative failed: ${e.message}")
         throw e
       }
     }
 
     // STOP SERVICE
     AsyncFunction("stop") {
-      val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")
-      try {
-        val stopIntent = Intent(ctx, BackgroundRunnerService::class.java)
-        ctx.stopService(stopIntent)
-        isServiceRunning = false
-      } catch (e: Exception) {
-        Log.e("BGRunner", "Failed to stop service: $e")
-      }
+      val ctx = appContext.reactContext ?: return@AsyncFunction false
+      BackgroundStorage.lastOptions = null
+      ctx.stopService(Intent(ctx, BackgroundRunnerService::class.java))
+      isServiceRunning = false
+      true
     }
-
+    
     // schedule daily
     AsyncFunction("scheduleDaily") { hour: Int, minute: Int, options: Map<String, Any> ->
       val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")

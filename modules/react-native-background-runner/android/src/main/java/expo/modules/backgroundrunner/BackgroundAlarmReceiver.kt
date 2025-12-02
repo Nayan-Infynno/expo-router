@@ -58,3 +58,12 @@ class BackgroundAlarmReceiver : BroadcastReceiver() {
     }
   }
 }
+
+@Suppress("DEPRECATION")
+fun Intent.getSerializableMap(key: String): HashMap<String, Any>? {
+  return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+    this.getSerializableExtra(key, HashMap::class.java) as? HashMap<String, Any>
+  } else {
+    this.getSerializableExtra(key) as? HashMap<String, Any>
+  }
+}

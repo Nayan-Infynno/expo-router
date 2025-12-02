@@ -14,22 +14,29 @@ object BackgroundNotificationController {
 
   private var builder: NotificationCompat.Builder? = null
 
-  fun startForegroundNotification(service: Service, options: Map<String, Any>) {
+  fun startForegroundNotification(service: Service, options: Map<String, Any>?) {
     createNotificationChannel(service)
 
-    val title = options["taskTitle"] as? String ?: "Background Service"
-    val desc = options["taskDesc"] as? String ?: "Service is running"
-    val colorStr = options["color"] as? String
-    val iconMap = options["taskIcon"] as? Map<*, *>
-    val linkingURI = options["linkingURI"] as? String
+    // Safe defaults (very important!)
+    val title = options?.get("taskTitle") as? String ?: "Background Service"
+    val desc = options?.get("taskDesc") as? String ?: "Running in background"
+    val colorStr = options?.get("color") as? String
+    val iconMap = options?.get("taskIcon") as? Map<*, *>
+    val linkingURI = options?.get("linkingURI") as? String
 
-    val tapIntent = if (linkingURI != null) {
+    // Open app when tapping notification
+    val tapIntent = if (!linkingURI.isNullOrEmpty()) {
       Intent(Intent.ACTION_VIEW).apply {
         data = android.net.Uri.parse(linkingURI)
         flags = Intent.FLAG_ACTIVITY_NEW_TASK
       }
     } else {
-      Intent(service, service::class.java)
+      service.packageManager.getLaunchIntentForPackage(service.packageName)?.apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+      } ?: Intent().apply {
+        setClassName(service.packageName, "${service.packageName}.MainActivity")
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+      }
     }
 
     val pendingIntent = PendingIntent.getActivity(
@@ -50,6 +57,7 @@ object BackgroundNotificationController {
       .setOngoing(true)
       .setAutoCancel(false)
 
+    // Optional color
     if (colorStr != null) {
       try {
         builder?.color = Color.parseColor(colorStr)
@@ -62,6 +70,7 @@ object BackgroundNotificationController {
       Notification.FLAG_ONGOING_EVENT or
       Notification.FLAG_FOREGROUND_SERVICE
 
+    // FINAL: This will no longer crash on first trigger
     service.startForeground(NOTIFICATION_ID, notification)
   }
 
@@ -87,34 +96,40 @@ object BackgroundNotificationController {
       builder?.setSmallIcon(iconRes)
     }
 
-    val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    val manager =
+      context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     manager.notify(NOTIFICATION_ID, builder!!.build())
   }
 
   fun stopForegroundNotification(service: Service) {
     try {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        // Android 14+ (API 34+)
         service.stopForeground(Service.STOP_FOREGROUND_REMOVE)
       } else {
         @Suppress("DEPRECATION")
-        service.stopForeground(true) // true = remove notification
+        service.stopForeground(true)
       }
-
-      val manager = service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+      val manager = service.getSystemService(Context.NOTIFICATION_SERVICE)
+        as NotificationManager
       manager.cancel(NOTIFICATION_ID)
-
     } catch (_: Exception) {}
 
     builder = null
   }
 
   private fun resolveIcon(context: Context, iconMap: Map<*, *>?): Int {
-    if (iconMap == null) return android.R.drawable.ic_popup_sync
-    val name = iconMap["name"] as? String ?: return android.R.drawable.ic_popup_sync
+    // 🔥 Guaranteed valid foreground notification icon (critical fix)
+    val appIcon = context.applicationInfo.icon.takeIf { it != 0 }
+      ?: android.R.drawable.ic_popup_sync
+
+    if (iconMap == null) return appIcon
+
+    val name = iconMap["name"] as? String ?: return appIcon
     val type = iconMap["type"] as? String ?: "mipmap"
+
     val resId = context.resources.getIdentifier(name, type, context.packageName)
-    return if (resId != 0) resId else android.R.drawable.ic_popup_sync
+
+    return if (resId != 0) resId else appIcon
   }
 
   private fun createNotificationChannel(context: Context) {
@@ -125,7 +140,9 @@ object BackgroundNotificationController {
         NotificationManager.IMPORTANCE_HIGH
       )
       channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-      val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+      val manager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
       manager.createNotificationChannel(channel)
     }
   }

@@ -16,23 +16,40 @@ const options = {
 
 export default function Assistant() {
   const onRunningProcess = async ({ parameters }: any) => {
-    const { delay } = parameters;
-    // 3 stages
-    const stages = [
-      { id: 1, label: "Stage 1: Gather", duration: 5000 },
-      { id: 2, label: "Stage 2: Process", duration: 5000 },
-      { id: 3, label: "Stage 3: Finalize", duration: 5000 },
-    ];
+    // const { delay } = parameters;
+    // // 3 stages
+    // const stages = [
+    //   { id: 1, label: "Stage 1: Gather", duration: 5000 },
+    //   { id: 2, label: "Stage 2: Process", duration: 5000 },
+    //   { id: 3, label: "Stage 3: Finalize", duration: 5000 },
+    // ];
 
-    for (const s of stages) {
-      await BackgroundRunner.updateNotification({ taskDesc: s.label });
-      const loops = Math.max(1, Math.floor(s.duration / delay));
-      for (let i = 0; i < loops; i++) {
-        await sleep(delay);
-      }
+    // for (const s of stages) {
+    //   await BackgroundRunner.updateNotification({ taskDesc: s.label });
+    //   const loops = Math.max(1, Math.floor(s.duration / delay));
+    //   for (let i = 0; i < loops; i++) {
+    //     console.log("Running step", i);
+    //     await sleep(delay);
+    //   }
+    // }
+
+    // await BackgroundRunner.updateNotification({ taskDesc: "Completed" });
+    // await BackgroundRunner.stop();
+
+    console.log("⏰ Scheduled Task Triggered!", parameters);
+
+    // Example background work
+    for (let i = 0; i < 10; i++) {
+      console.log("Running step", i);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
-    await BackgroundRunner.updateNotification({ taskDesc: "Completed" });
+    // Update notification
+    await BackgroundRunner.updateNotification({
+      taskDesc: "Scheduled Task Finished!",
+    });
+
+    // Stop service
     await BackgroundRunner.stop();
   };
 
@@ -66,13 +83,13 @@ export default function Assistant() {
     try {
       // First register default (headless-style) handler
       BackgroundRunner.registerDefault(onScheduledTask);
-      const hour = 18; // 4 PM India
-      const minute = 41;
+      const hour = 14; // 4 PM India
+      const minute = 14;
 
       await BackgroundRunner.scheduleDaily(hour, minute, {
         taskName: "DailyTask",
-        taskTitle: "Daily Task Running",
-        taskDesc: "Your scheduled task is executing",
+        taskTitle: "Daily Task Running ----",
+        taskDesc: "Your scheduled task is executing ----",
         taskIcon: { name: "ic_launcher", type: "mipmap" },
         color: "#ff0000",
         linkingURI: "expopilot://assistant",
