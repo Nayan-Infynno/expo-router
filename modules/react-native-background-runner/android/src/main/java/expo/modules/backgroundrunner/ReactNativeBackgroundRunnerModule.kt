@@ -4,18 +4,12 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Calendar
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class ReactNativeBackgroundRunnerModule : Module() {
 
@@ -25,13 +19,12 @@ class ReactNativeBackgroundRunnerModule : Module() {
     Name("ReactNativeBackgroundRunner")
     Events("onExecute")
 
-    // When module attaches to JS runtime, set emitter module and flush queued events
     OnCreate {
-      BackgroundEventEmitter.module = this@ReactNativeBackgroundRunnerModule
-      BackgroundEventEmitter.flushPendingEvents()
+      // Set module into emitter (so that pending events get flushed)
+      BackgroundEventEmitter.setModule(this@ReactNativeBackgroundRunnerModule)
     }
 
-    // START SERVICE WITH AUTO PERMISSIONS + SAFE ORDER
+    // START SERVICE
     AsyncFunction("startNative") { options: Map<String, Any> ->
       val context = appContext.reactContext
         ?: throw Exception("React context not available")
@@ -57,7 +50,7 @@ class ReactNativeBackgroundRunnerModule : Module() {
       }
     }
 
-    // STOP SERVICE
+    // STOP
     AsyncFunction("stop") {
       val ctx = appContext.reactContext ?: return@AsyncFunction false
       BackgroundStorage.lastOptions = null
@@ -65,10 +58,15 @@ class ReactNativeBackgroundRunnerModule : Module() {
       isServiceRunning = false
       true
     }
-    
+
     // schedule daily
     AsyncFunction("scheduleDaily") { hour: Int, minute: Int, options: Map<String, Any> ->
+      Log.d("BGRunner scheduleDaily", "hour: $hour, minute: $minute")
       val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")
+
+      // Ensure channel exists BEFORE alarm fires (important)
+      BackgroundNotificationController.ensureChannel(ctx)
+
       val alarmManager = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
       val intent = Intent(ctx, BackgroundAlarmReceiver::class.java)
       intent.putExtra("options", HashMap(options))
@@ -97,12 +95,10 @@ class ReactNativeBackgroundRunnerModule : Module() {
       }
     }
 
-    // update notification
     AsyncFunction("updateNotification") { options: Map<String, Any> ->
       BackgroundNotificationController.updateNotification(appContext.reactContext!!, options)
     }
 
-    // battery helpers
     Function("isBatteryOptIgnored") {
       val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")
       BatteryOptimizationHelper.isIgnoringBatteryOptimizations(ctx)

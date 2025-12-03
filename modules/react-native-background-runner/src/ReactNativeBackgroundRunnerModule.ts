@@ -1,4 +1,6 @@
+// ReactNativeBackgroundRunnerModule.ts
 import { NativeModule, requireNativeModule } from "expo";
+import { AppRegistry } from "react-native";
 import {
   ExecuteEventPayload,
   ReactNativeBackgroundRunnerModuleEvents,
@@ -10,6 +12,7 @@ declare class ReactNativeBackgroundRunnerModuleType extends NativeModule<ReactNa
   stop(): Promise<void>;
   isRunning(): boolean;
   scheduleDaily(hour: number, minute: number, options: any): Promise<void>;
+  openAutoStartSettings(): Promise<void>;
 
   addListener<EventName extends keyof ReactNativeBackgroundRunnerModuleEvents>(
     eventName: EventName,
@@ -26,6 +29,10 @@ const nativeModule = requireNativeModule<ReactNativeBackgroundRunnerModuleType>(
 let activeCallback: null | ((params: any) => Promise<void>) = null;
 let defaultHandler: null | ((params: any) => Promise<void>) = null;
 
+/**
+ * When native fires "onExecute" we try active -> default -> warn.
+ * This works when app process has JS runtime already running.
+ */
 nativeModule.addListener("onExecute", async (payload: ExecuteEventPayload) => {
   try {
     if (activeCallback) {
@@ -47,17 +54,11 @@ nativeModule.addListener("onExecute", async (payload: ExecuteEventPayload) => {
 
 // ---- PUBLIC API ----
 export default {
-  /**
-   * Start background service and register callback.
-   */
   async start(callback: any, options: any) {
     activeCallback = callback;
     return nativeModule.startNative(options);
   },
 
-  /**
-   * Stop service
-   */
   async stop() {
     activeCallback = null;
     return nativeModule.stop();
@@ -72,14 +73,53 @@ export default {
   },
 
   async scheduleDaily(hour: number, minute: number, options: any) {
-    console.log("Will runt he scheduled task");
-    return nativeModule.scheduleDaily(hour, minute, options);
+    try {
+      return nativeModule.scheduleDaily(hour, minute, options);
+    } catch (error) {
+      console.error("❌ BackgroundRunner scheduleDaily error:", error);
+    }
+  },
+
+  async openAutoStartSettings() {
+    return nativeModule.openAutoStartSettings();
   },
 
   /**
-   * Optional fallback headless handler
+   * Register a fallback headless handler. IMPORTANT: call this at top-level
+   * (e.g. in index.js or root module import), not inside a screen useEffect,
+   * so it's available to headless JS when Android starts the process.
    */
   registerDefault(handler: any) {
     defaultHandler = handler;
+
+    // Register headless task so RN knows how to run BackgroundRunnerTask when app
+    // process is started by Android (headless).
+    try {
+      AppRegistry.registerHeadlessTask("BackgroundRunnerTask", () => {
+        return async (params: any) => {
+          if (defaultHandler) {
+            try {
+              await defaultHandler(params);
+            } catch (e) {
+              console.error("BackgroundRunner headless handler threw:", e);
+            }
+          } else {
+            console.warn(
+              "BackgroundRunner headless invoked but no default handler"
+            );
+          }
+          // must return a resolved promise
+          return Promise.resolve();
+        };
+      });
+    } catch (e) {
+      // registerHeadlessTask can only be called once per process for same key,
+      // ignore if already registered.
+      // Log for debugging
+      console.warn(
+        "BackgroundRunner: registerHeadlessTask error (ignored):",
+        e
+      );
+    }
   },
 };

@@ -1,7 +1,6 @@
 package expo.modules.backgroundrunner
 
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import com.facebook.react.HeadlessJsTaskService
 import com.facebook.react.jstasks.HeadlessJsTaskConfig
@@ -14,6 +13,7 @@ class BackgroundRunnerTaskService : HeadlessJsTaskService() {
       val options = intent?.getSerializableMap("options") ?: hashMapOf()
       val params = options["parameters"] as? Map<String, Any> ?: emptyMap()
 
+      Log.d("BGTaskService", "onStartCommand params: $params")
       BackgroundEventEmitter.fireExecuteEvent(
         mapOf("parameters" to params)
       )
@@ -28,6 +28,7 @@ class BackgroundRunnerTaskService : HeadlessJsTaskService() {
   override fun getTaskConfig(intent: Intent?): HeadlessJsTaskConfig {
     val options = intent?.getSerializableMap("options") ?: hashMapOf()
     val params = options["parameters"] as? Map<String, Any> ?: emptyMap()
+    Log.d("BGTaskService", "getTaskConfig params: $params")
 
     val jsParams = Arguments.makeNativeMap(
       mapOf("parameters" to params)

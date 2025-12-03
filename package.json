@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "prebuild": "npx expo prebuild --clean",
+    "prebuildAndroid": "npx expo prebuild -p android",
     "androidDevice": "expo run:android --device",
     "iosDevice": "expo run:ios --device",
     "gradleClean": "cd android && ./gradlew clean",

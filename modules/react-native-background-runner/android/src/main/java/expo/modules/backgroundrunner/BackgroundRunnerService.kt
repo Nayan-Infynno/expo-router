@@ -1,64 +1,3 @@
-// package expo.modules.backgroundrunner
-
-// import android.app.Service
-// import android.content.Intent
-// import android.os.Build
-// import android.os.IBinder
-// import android.util.Log
-// import androidx.core.app.NotificationCompat
-
-// class BackgroundRunnerService : Service() {
-
-//     private val CHANNEL_ID = "background_runner_channel"
-
-//     override fun onBind(intent: Intent?): IBinder? = null
-
-//     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//         try {
-//             val options =
-//                 intent?.getSerializableMap("options") ?: BackgroundStorage.lastOptions ?: hashMapOf()
-
-//             BackgroundStorage.lastOptions = options
-
-//             // Create minimal notification
-//             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-//                 .setContentTitle(options["taskTitle"]?.toString() ?: "Background Task")
-//                 .setContentText(options["taskDesc"]?.toString() ?: "Running...")
-//                 .setOngoing(true)
-//                 .setSmallIcon(android.R.drawable.ic_media_play)
-//                 .build()
-
-//             startForeground(1, notification)
-
-//             // Start Headless JS Task
-//             val headlessIntent = Intent(applicationContext, BackgroundRunnerTaskService::class.java)
-//             headlessIntent.putExtra("options", HashMap(options))
-//             applicationContext.startService(headlessIntent)
-
-//         } catch (e: Exception) {
-//             Log.e("BGService", "Error: ${e.message}")
-//         }
-
-//         return START_STICKY
-//     }
-
-//     // ⭐ Restart if user swipes away the app
-//     override fun onTaskRemoved(rootIntent: Intent?) {
-//         super.onTaskRemoved(rootIntent)
-
-//         val restartIntent = Intent("expo.backgroundrunner.RESTART")
-//         sendBroadcast(restartIntent)
-//     }
-
-//     override fun onDestroy() {
-//         super.onDestroy()
-//         try {
-//             stopForeground(STOP_FOREGROUND_REMOVE)
-//         } catch (_: Exception) {}
-//     }
-// }
-
-
 package expo.modules.backgroundrunner
 
 import android.app.NotificationChannel
@@ -72,7 +11,7 @@ import androidx.core.app.NotificationCompat
 
 class BackgroundRunnerService : Service() {
 
-    private val CHANNEL_ID = "background_runner_channel"
+    private val CHANNEL_ID = BackgroundNotificationController.CHANNEL_ID
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -83,10 +22,9 @@ class BackgroundRunnerService : Service() {
 
             BackgroundStorage.lastOptions = options
 
-            // CREATE NOTIFICATION CHANNEL ⭐⭐ (mandatory for first time)
-            createNotificationChannel()
+            // Ensure channel exists (first-time)
+            BackgroundNotificationController.ensureChannel(this)
 
-            // Build notification
             val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(options["taskTitle"]?.toString() ?: "Background Task")
                 .setContentText(options["taskDesc"]?.toString() ?: "Running...")
@@ -96,7 +34,7 @@ class BackgroundRunnerService : Service() {
 
             startForeground(1, notification)
 
-            // Start Headless JS
+            // Start Headless JS Task service
             val headlessIntent = Intent(applicationContext, BackgroundRunnerTaskService::class.java)
             headlessIntent.putExtra("options", HashMap(options))
             applicationContext.startService(headlessIntent)
@@ -106,18 +44,6 @@ class BackgroundRunnerService : Service() {
         }
 
         return START_STICKY
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Background Runner",
-                NotificationManager.IMPORTANCE_LOW
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager?.createNotificationChannel(channel)
-        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

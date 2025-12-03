@@ -2,10 +2,20 @@ import React from "react";
 
 import { Stack } from "expo-router";
 import { AppRegistry, useColorScheme } from "react-native";
+import { executeTask } from "./(drawer)/(tabs)/assistant";
 
-const emptyHandler = async () => {};
+// your headless handler
+async function myScheduledHandler({ parameters }: any) {
+  if (parameters?.runningOn === "SCHEDULE_TASK") {
+    console.log("HANDLESS TASK IN _LAYOUT FILE CODE : ", parameters);
+    executeTask(parameters, false);
+  }
+}
 
-AppRegistry.registerHeadlessTask("BackgroundRunnerTask", () => emptyHandler);
+AppRegistry.registerHeadlessTask(
+  "BackgroundRunnerTask",
+  () => myScheduledHandler
+);
 
 const _layout = () => {
   const colorScheme = useColorScheme();

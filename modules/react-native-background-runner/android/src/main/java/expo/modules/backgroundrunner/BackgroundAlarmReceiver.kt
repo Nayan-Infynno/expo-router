@@ -1,5 +1,6 @@
 package expo.modules.backgroundrunner
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -11,14 +12,20 @@ import java.util.Calendar
 
 class BackgroundAlarmReceiver : BroadcastReceiver() {
 
+  @SuppressLint("UnsafeIntentLaunch")
   override fun onReceive(context: Context?, intent: Intent?) {
     if (context == null || intent == null) return
 
     try {
-      val optionsMap = intent.getSerializableMap("options")
+      // Ensure channel exists before starting any foreground service
+      BackgroundNotificationController.ensureChannel(context)
 
+      val optionsMap = intent.getSerializableMap("options")
       val serviceIntent = Intent(context, BackgroundRunnerService::class.java)
       if (optionsMap != null) serviceIntent.putExtra("options", optionsMap)
+
+      // Mark that this start came from alarm (optional)
+      serviceIntent.putExtra("fromAlarm", true)
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         context.startForegroundService(serviceIntent)

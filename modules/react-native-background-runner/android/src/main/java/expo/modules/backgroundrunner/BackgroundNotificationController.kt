@@ -9,22 +9,26 @@ import androidx.core.app.NotificationCompat
 
 object BackgroundNotificationController {
 
-  private const val CHANNEL_ID = "background_runner_channel"
+  // keep channel id public so other files can reference if needed
+  const val CHANNEL_ID = "background_runner_channel"
   private const val NOTIFICATION_ID = 10001
 
   private var builder: NotificationCompat.Builder? = null
 
+  /** Public helper to ensure the notification channel exists */
+  fun ensureChannel(context: Context) {
+    createNotificationChannel(context)
+  }
+
   fun startForegroundNotification(service: Service, options: Map<String, Any>?) {
     createNotificationChannel(service)
 
-    // Safe defaults (very important!)
     val title = options?.get("taskTitle") as? String ?: "Background Service"
     val desc = options?.get("taskDesc") as? String ?: "Running in background"
     val colorStr = options?.get("color") as? String
     val iconMap = options?.get("taskIcon") as? Map<*, *>
     val linkingURI = options?.get("linkingURI") as? String
 
-    // Open app when tapping notification
     val tapIntent = if (!linkingURI.isNullOrEmpty()) {
       Intent(Intent.ACTION_VIEW).apply {
         data = android.net.Uri.parse(linkingURI)
@@ -57,7 +61,6 @@ object BackgroundNotificationController {
       .setOngoing(true)
       .setAutoCancel(false)
 
-    // Optional color
     if (colorStr != null) {
       try {
         builder?.color = Color.parseColor(colorStr)
@@ -67,10 +70,9 @@ object BackgroundNotificationController {
     val notification = builder!!.build()
     notification.flags =
       Notification.FLAG_NO_CLEAR or
-      Notification.FLAG_ONGOING_EVENT or
-      Notification.FLAG_FOREGROUND_SERVICE
+              Notification.FLAG_ONGOING_EVENT or
+              Notification.FLAG_FOREGROUND_SERVICE
 
-    // FINAL: This will no longer crash on first trigger
     service.startForeground(NOTIFICATION_ID, notification)
   }
 
@@ -110,7 +112,7 @@ object BackgroundNotificationController {
         service.stopForeground(true)
       }
       val manager = service.getSystemService(Context.NOTIFICATION_SERVICE)
-        as NotificationManager
+              as NotificationManager
       manager.cancel(NOTIFICATION_ID)
     } catch (_: Exception) {}
 
@@ -118,7 +120,6 @@ object BackgroundNotificationController {
   }
 
   private fun resolveIcon(context: Context, iconMap: Map<*, *>?): Int {
-    // 🔥 Guaranteed valid foreground notification icon (critical fix)
     val appIcon = context.applicationInfo.icon.takeIf { it != 0 }
       ?: android.R.drawable.ic_popup_sync
 
@@ -137,7 +138,7 @@ object BackgroundNotificationController {
       val channel = NotificationChannel(
         CHANNEL_ID,
         "Background Runner",
-        NotificationManager.IMPORTANCE_HIGH
+        NotificationManager.IMPORTANCE_LOW
       )
       channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
