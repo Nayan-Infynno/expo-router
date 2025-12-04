@@ -81,11 +81,30 @@ export default function Assistant() {
     }
   };
 
+  const onPressScheduleIOS = async () => {
+    try {
+      const hour = 18; // 7 PM
+      const minute = 55;
+
+      const options = {
+        title: "Good Morning nyn",
+        message: "Your daily job is ready!",
+      };
+
+      await BackgroundRunner.scheduleDailyIOS(hour, minute, options);
+
+      alert(`Scheduled successfully!`);
+    } catch (e) {
+      console.error("Schedule error", e);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Button title="Start Background" onPress={onPress} />
       <Button title="Schedule Background" onPress={onPressSchedule} />
       <Button title="Take Permission" onPress={onPressAutoStartPermission} />
+      <Button title="Schedule Daily IOS" onPress={onPressScheduleIOS} />
     </View>
   );
 }

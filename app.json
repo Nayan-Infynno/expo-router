@@ -13,7 +13,9 @@
       "bundleIdentifier": "com.krunalinfynno.ExpoPilot",
       "infoPlist": {
         "UIViewControllerBasedStatusBarAppearance": true,
-        "UIDesignRequiresCompatibility": true
+        "UIDesignRequiresCompatibility": true,
+        "BGTaskSchedulerPermittedIdentifiers": ["expo.backgroundrunner.bgtask"],
+        "UIBackgroundModes": ["remote-notification", "fetch"]
       }
     },
     "android": {

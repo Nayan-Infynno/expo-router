@@ -1,48 +1,52 @@
 import ExpoModulesCore
+import UserNotifications
 
 public class ReactNativeBackgroundRunnerModule: Module {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
   public func definition() -> ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ReactNativeBackgroundRunner')` in JavaScript.
     Name("ReactNativeBackgroundRunner")
-
-    // Defines constant property on the module.
-    Constant("PI") {
-      Double.pi
-    }
-
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
-
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      return "Hello world! 👋"
-    }
-
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { (value: String) in
-      // Send an event to JavaScript.
-      self.sendEvent("onChange", [
-        "value": value
-      ])
-    }
-
-    // Enables the module to be used as a native view. Definition components that are accepted as part of the
-    // view definition: Prop, Events.
-    View(ReactNativeBackgroundRunnerView.self) {
-      // Defines a setter for the `url` prop.
-      Prop("url") { (view: ReactNativeBackgroundRunnerView, url: URL) in
-        if view.webView.url != url {
-          view.webView.load(URLRequest(url: url))
-        }
-      }
-
-      Events("onLoad")
+      
+    AsyncFunction("scheduleDailyIOS") { (hour: Int, minute: Int, options: [String: Any]) in
+        return try await self.scheduleDailyNotification(hour: hour, minute: minute, options: options)
     }
   }
+}
+
+extension ReactNativeBackgroundRunnerModule {
+    func scheduleDailyNotification(hour: Int, minute: Int, options: [String: Any]) async throws -> String {
+        let center = UNUserNotificationCenter.current()
+        
+        // 1. Request permission
+        let granted = try await center.requestAuthorization(options: [.alert, .sound, .badge])
+        if !granted {
+            throw NSError(domain: "ReactNativeBackgroundRunner", code: 1, userInfo: [NSLocalizedDescriptionKey: "Notification permission denied"])
+        }
+        
+        // 2. Clear old scheduled notifications (optional but recommended)
+        center.removeAllPendingNotificationRequests()
+        
+        // 3. Create Notification Content
+        let content = UNMutableNotificationContent()
+        content.title = options["title"] as? String ?? "Daily Reminder"
+        content.body = options["message"] as? String ?? "Your daily notification"
+        content.sound = UNNotificationSound.default
+        
+        // 4. Create daily trigger (repeat everyday)
+        var dateComponents = DateComponents()
+        dateComponents.hour = hour
+        dateComponents.minute = minute
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+
+        // 5. Create request ID
+        let request = UNNotificationRequest(
+          identifier: "ReactNativeBackgroundRunnerDaily",
+          content: content,
+          trigger: trigger
+        )
+        
+        // 6. Register notification
+        try await center.add(request)
+        
+        return "iOS daily notification scheduled at \(hour):\(minute)"
+    }
 }

@@ -13,6 +13,7 @@ declare class ReactNativeBackgroundRunnerModuleType extends NativeModule<ReactNa
   isRunning(): boolean;
   scheduleDaily(hour: number, minute: number, options: any): Promise<void>;
   openAutoStartSettings(): Promise<void>;
+  scheduleDailyIOS(hour: number, minute: number, options: any): Promise<void>;
 
   addListener<EventName extends keyof ReactNativeBackgroundRunnerModuleEvents>(
     eventName: EventName,
@@ -82,6 +83,10 @@ export default {
 
   async openAutoStartSettings() {
     return nativeModule.openAutoStartSettings();
+  },
+
+  async scheduleDailyIOS(hour: number, minute: number, options: any) {
+    return nativeModule.scheduleDailyIOS(hour, minute, options);
   },
 
   /**
