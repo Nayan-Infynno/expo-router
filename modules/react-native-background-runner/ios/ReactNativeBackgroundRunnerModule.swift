@@ -5,6 +5,12 @@ public class ReactNativeBackgroundRunnerModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ReactNativeBackgroundRunner")
       
+    Events("onNotificationReceivedIOS")
+      
+    OnCreate {
+      BackgroundRunnerEventEmitter.shared.setModule(self)
+    }
+      
     AsyncFunction("scheduleDailyIOS") { (hour: Int, minute: Int, options: [String: Any]) in
         return try await self.scheduleDailyNotification(hour: hour, minute: minute, options: options)
     }

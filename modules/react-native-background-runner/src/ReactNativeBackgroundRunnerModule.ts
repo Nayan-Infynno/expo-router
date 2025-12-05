@@ -89,6 +89,14 @@ export default {
     return nativeModule.scheduleDailyIOS(hour, minute, options);
   },
 
+  addListener(eventName: any, listener: any) {
+    return nativeModule.addListener(eventName, listener);
+  },
+
+  removeListeners(count: number) {
+    return nativeModule.removeListeners(count);
+  },
+
   /**
    * Register a fallback headless handler. IMPORTANT: call this at top-level
    * (e.g. in index.js or root module import), not inside a screen useEffect,

@@ -1,5 +1,5 @@
 import BackgroundRunner from "@/modules/react-native-background-runner/src/ReactNativeBackgroundRunnerModule";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, StyleSheet, View } from "react-native";
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -48,6 +48,18 @@ export async function executeTask(parameters: any, isHeadless: boolean) {
 }
 
 export default function Assistant() {
+  useEffect(() => {
+    const subscription = BackgroundRunner.addListener(
+      "onNotificationReceivedIOS",
+      (data: any) => {
+        console.log("🔥 Notification Event:", data);
+      }
+    );
+
+    // cleanup when screen unmount
+    return () => subscription.remove();
+  }, []);
+
   const onRunningProcess = async ({ parameters }: any) => {
     return executeTask(parameters, false);
   };
@@ -83,8 +95,8 @@ export default function Assistant() {
 
   const onPressScheduleIOS = async () => {
     try {
-      const hour = 18; // 7 PM
-      const minute = 55;
+      const hour = 12; // 7 PM
+      const minute = 40;
 
       const options = {
         title: "Good Morning nyn",
