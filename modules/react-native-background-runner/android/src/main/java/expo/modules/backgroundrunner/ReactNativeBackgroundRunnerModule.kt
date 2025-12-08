@@ -29,6 +29,14 @@ class ReactNativeBackgroundRunnerModule : Module() {
       val context = appContext.reactContext
         ?: throw Exception("React context not available")
 
+      val activity = appContext.currentActivity
+      // Notification Permission
+      if (!NotificationPermissionHelper.hasPermission(context)) {
+        NotificationPermissionHelper.requestPermission(activity)
+        NotificationPermissionHelper.showPermissionToast(context)
+        throw Exception("Notification permission not granted")
+      }
+
       BackgroundStorage.lastOptions = options
 
       val intent = Intent(context, BackgroundRunnerService::class.java)
@@ -63,6 +71,14 @@ class ReactNativeBackgroundRunnerModule : Module() {
     AsyncFunction("scheduleDaily") { hour: Int, minute: Int, options: Map<String, Any> ->
       Log.d("BGRunner scheduleDaily", "hour: $hour, minute: $minute")
       val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")
+
+      val activity = appContext.currentActivity
+      // Notification Permission
+      if (!NotificationPermissionHelper.hasPermission(ctx)) {
+        NotificationPermissionHelper.requestPermission(activity)
+        NotificationPermissionHelper.showPermissionToast(ctx)
+        throw Exception("Notification permission not granted")
+      }
 
       // Ensure channel exists BEFORE alarm fires (important)
       BackgroundNotificationController.ensureChannel(ctx)

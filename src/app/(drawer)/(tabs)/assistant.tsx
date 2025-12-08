@@ -34,6 +34,9 @@ export async function executeTask(parameters: any, isHeadless: boolean) {
 
   for (let i = 0; i < 10; i++) {
     console.log("Running step", i);
+    await BackgroundRunner.updateNotification({
+      taskDesc: `Steps ${i}}`,
+    });
     await sleep(1000);
   }
 
