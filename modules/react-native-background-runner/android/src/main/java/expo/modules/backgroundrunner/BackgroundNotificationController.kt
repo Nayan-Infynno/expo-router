@@ -77,31 +77,98 @@ object BackgroundNotificationController {
   }
 
   fun updateNotification(context: Context, options: Map<String, Any>) {
-    if (builder == null) return
-
     val title = options["taskTitle"] as? String
     val desc = options["taskDesc"] as? String
     val colorStr = options["color"] as? String
     val iconMap = options["taskIcon"] as? Map<*, *>
 
-    if (title != null) builder?.setContentTitle(title)
-    if (desc != null) builder?.setContentText(desc)
-
-    if (colorStr != null) {
-      try {
-        builder?.color = Color.parseColor(colorStr)
-      } catch (_: Exception) {}
-    }
-
-    if (iconMap != null) {
-      val iconRes = resolveIcon(context, iconMap)
-      builder?.setSmallIcon(iconRes)
-    }
+    if (builder != null) {
+      // update existing builder
+      if (title != null) builder?.setContentTitle(title)
+      if (desc != null) builder?.setContentText(desc)
+      if (colorStr != null) {
+        try { builder?.color = android.graphics.Color.parseColor(colorStr) } catch (_: Exception) {}
+      }
+      if (iconMap != null) {
+        val iconRes = resolveIcon(context, iconMap)
+        builder?.setSmallIcon(iconRes)
+      }
 
     val manager =
       context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     manager.notify(NOTIFICATION_ID, builder!!.build())
+    return
+    }
+
+    // fallback: no builder (service not started) -> create one-off notification and post it
+    createNotificationChannel(context)
+    val iconRes = resolveIcon(context, iconMap)
+    val tempBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+      .setContentTitle(title ?: "Background Service")
+      .setContentText(desc ?: "Running...")
+      .setSmallIcon(iconRes)
+      .setPriority(NotificationCompat.PRIORITY_HIGH)
+      .setOngoing(false)
+      .setAutoCancel(true)
+
+    if (colorStr != null) {
+      try { tempBuilder.color = android.graphics.Color.parseColor(colorStr) } catch (_: Exception) {}
+    }
+
+    val manager =
+      context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    manager.notify(NOTIFICATION_ID, tempBuilder.build())
   }
+
+  fun buildNotification(context: Context, options: Map<String, Any>): Notification {
+
+    // Channel ensure
+    ensureChannel(context)
+
+    // Extract fields
+    val title = options["taskTitle"]?.toString() ?: "Background Task"
+    val desc = options["taskDesc"]?.toString() ?: "Running..."
+    val colorStr = options["color"]?.toString()
+    val iconMap = options["taskIcon"] as? Map<*, *>
+
+    // Builder create OR update
+    if (builder == null) {
+      builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setOngoing(true)
+        .setAutoCancel(false)
+    }
+
+    // Set notification core UI
+    builder!!
+      .setContentTitle(title)
+      .setContentText(desc)
+      .setSmallIcon(resolveIcon(context, iconMap))
+
+    // Optional color
+    if (colorStr != null) {
+      try { builder!!.color = Color.parseColor(colorStr) } catch (_: Exception) {}
+    }
+
+    // Optional tap intent -> open app
+    val tapIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+      ?.apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+      }
+
+    if (tapIntent != null) {
+      val pendingIntent = PendingIntent.getActivity(
+        context,
+        0,
+        tapIntent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+      )
+      builder!!.setContentIntent(pendingIntent)
+    }
+
+    return builder!!.build()
+  }
+
 
   fun stopForegroundNotification(service: Service) {
     try {
