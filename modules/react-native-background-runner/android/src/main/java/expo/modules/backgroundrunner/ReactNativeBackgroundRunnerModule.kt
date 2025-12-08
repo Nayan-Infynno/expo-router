@@ -34,7 +34,7 @@ class ReactNativeBackgroundRunnerModule : Module() {
       if (!NotificationPermissionHelper.hasPermission(context)) {
         NotificationPermissionHelper.requestPermission(activity)
         NotificationPermissionHelper.showPermissionToast(context)
-        throw Exception("Notification permission not granted")
+        return@AsyncFunction false
       }
 
       BackgroundStorage.lastOptions = options
@@ -77,7 +77,7 @@ class ReactNativeBackgroundRunnerModule : Module() {
       if (!NotificationPermissionHelper.hasPermission(ctx)) {
         NotificationPermissionHelper.requestPermission(activity)
         NotificationPermissionHelper.showPermissionToast(ctx)
-        throw Exception("Notification permission not granted")
+        return@AsyncFunction false
       }
 
       // Ensure channel exists BEFORE alarm fires (important)
