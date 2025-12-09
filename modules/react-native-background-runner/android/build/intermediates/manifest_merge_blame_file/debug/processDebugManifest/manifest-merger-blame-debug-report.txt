@@ -5,87 +5,110 @@
 5
 6    <uses-sdk android:minSdkVersion="24" />
 7
-8    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-8-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:4:3-75
-8-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:4:20-72
-9    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-9-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:3-85
-9-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:20-82
-10    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-10-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:3-75
-10-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:20-72
-11    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-11-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:3-77
-11-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:20-74
-12    <uses-permission android:name="android.permission.WAKE_LOCK" />
-12-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:3-66
-12-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:20-63
-13    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-13-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:3-93
-13-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:20-90
+8    <!-- PERMISSIONS -->
+9    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+9-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:3-75
+9-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:20-72
+10    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+10-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:3-85
+10-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:20-82
+11    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+11-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:3-75
+11-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:20-72
+12    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+12-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:3-77
+12-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:20-74
+13    <uses-permission android:name="android.permission.WAKE_LOCK" />
+13-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:3-66
+13-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:20-63
 14    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 14-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:10:3-79
 14-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:10:20-76
 15
-16    <application>
-16-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:13:3-49:17
-17        <meta-data
-17-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:14:5-16:53
-18            android:name="expo.modules.backgroundrunner.NOTIFICATION_CHANNEL"
-18-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:15:9-74
-19            android:value="background_runner_channel" />
-19-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:16:9-50
+16    <!-- Battery opt (optional but safe) -->
+17    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+17-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:13:3-93
+17-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:13:20-90
+18
+19    <application>
+19-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:15:3-65:17
 20
-21        <service
-21-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:18:5-23:52
-22            android:name="expo.modules.backgroundrunner.BackgroundRunnerService"
-22-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:19:7-46
-23            android:enabled="true"
-23-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:20:7-29
-24            android:exported="false"
-24-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:21:7-31
-25            android:foregroundServiceType="dataSync"
-25-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:22:7-47
-26            tools:ignore="ForegroundServicePermission" />
-26-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:23:7-49
-27        <service
-27-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:25:5-28:34
-28            android:name="expo.modules.backgroundrunner.BackgroundRunnerTaskService"
-28-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:26:7-50
-29            android:enabled="true"
-29-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:27:7-29
-30            android:exported="false" />
-30-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:28:7-31
-31
-32        <receiver
-32-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:30:5-33:33
-33            android:name="expo.modules.backgroundrunner.BackgroundAlarmReceiver"
-33-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:31:7-46
-34            android:enabled="true"
-34-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:32:7-29
-35            android:exported="true" />
-35-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:33:7-30
-36        <receiver
-36-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:35:5-47:16
-37            android:name="expo.modules.backgroundrunner.BackgroundAutostartReceiver"
-37-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:36:9-52
-38            android:exported="true"
-38-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:37:9-32
-39            tools:ignore="ExportedReceiver" >
-39-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:38:9-40
-40            <intent-filter>
-40-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:40:7-42:23
-41                <action android:name="expo.backgroundrunner.RESTART" />
-41-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:41:9-64
-41-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:41:17-61
-42            </intent-filter>
-43            <intent-filter>
-43-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:44:7-46:23
-44                <action android:name="android.intent.action.BOOT_COMPLETED" />
-44-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:45:9-71
-44-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:45:17-68
-45            </intent-filter>
-46        </receiver>
-47    </application>
-48
-49</manifest>
+21        <!-- Notification channel (Expo config) -->
+22        <meta-data
+22-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:18:5-20:53
+23            android:name="expo.modules.backgroundrunner.NOTIFICATION_CHANNEL"
+23-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:19:9-74
+24            android:value="background_runner_channel" />
+24-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:20:9-50
+25
+26        <!-- SERVICES -->
+27
+28
+29        <!-- MAIN FOREGROUND SERVICE -->
+30        <service
+30-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:25:5-30:54
+31            android:name="expo.modules.backgroundrunner.BackgroundRunnerService"
+31-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:26:9-48
+32            android:enabled="true"
+32-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:27:9-31
+33            android:exported="false"
+33-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:28:9-33
+34            android:foregroundServiceType="dataSync"
+34-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:29:9-49
+35            tools:ignore="ForegroundServicePermission" />
+35-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:30:9-51
+36
+37        <!-- HEADLESS JS SERVICE -->
+38        <service
+38-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:33:5-36:36
+39            android:name="expo.modules.backgroundrunner.BackgroundRunnerTaskService"
+39-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:34:9-52
+40            android:enabled="true"
+40-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:35:9-31
+41            android:exported="false" />
+41-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:36:9-33
+42
+43        <!-- RECEIVERS -->
+44
+45
+46        <!-- ALARM RECEIVER (has to be exported true for AlarmManager) -->
+47        <receiver
+47-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:42:5-45:35
+48            android:name="expo.modules.backgroundrunner.BackgroundAlarmReceiver"
+48-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:43:9-48
+49            android:enabled="true"
+49-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:44:9-31
+50            android:exported="true" />
+50-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:45:9-32
+51
+52        <!-- AUTOSTART + INTERNAL RESTART RECEIVER -->
+53        <receiver
+53-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:48:5-63:16
+54            android:name="expo.modules.backgroundrunner.BackgroundAutostartReceiver"
+54-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:49:9-52
+55            android:enabled="true"
+55-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:50:9-31
+56            android:exported="true"
+56-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:51:9-32
+57            tools:ignore="ExportedReceiver" >
+57-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:52:9-40
+58
+59            <!-- App internal restart -->
+60            <intent-filter>
+60-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:55:7-57:23
+61                <action android:name="expo.backgroundrunner.RESTART" />
+61-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:56:9-64
+61-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:56:17-61
+62            </intent-filter>
+63
+64            <!-- Auto-start after reboot -->
+65            <intent-filter>
+65-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:60:7-62:23
+66                <action android:name="android.intent.action.BOOT_COMPLETED" />
+66-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:61:9-71
+66-->/Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:61:17-68
+67            </intent-filter>
+68        </receiver>
+69    </application>
+70
+71</manifest>

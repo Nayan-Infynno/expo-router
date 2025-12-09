@@ -8,8 +8,8 @@ const optionForBackground = {
   taskName: "ExampleBackground",
   taskTitle: "Example Running",
   taskDesc: "Preparing...",
-  taskIcon: { name: "ic_launcher", type: "mipmap" },
-  color: "#bababaff",
+  taskIcon: { name: "", type: "" },
+  color: "#ff0000",
   linkingURI: "expopilot://assistant",
   parameters: { delay: 1000, runningOn: "BACKGROUND_TASK" },
 };
@@ -18,7 +18,7 @@ const optionForSchedule = {
   taskName: "DailyTask",
   taskTitle: "Daily Task Running",
   taskDesc: "Executing scheduled task...",
-  taskIcon: { name: "ic_launcher", type: "mipmap" },
+  taskIcon: { name: "", type: "" },
   color: "#ff0000",
   linkingURI: "expopilot://assistant",
   parameters: {
@@ -34,9 +34,10 @@ export async function executeTask(parameters: any, isHeadless: boolean) {
 
   for (let i = 0; i < 10; i++) {
     console.log("Running step", i);
-    await BackgroundRunner.updateNotification({
-      taskDesc: `Steps ${i}`,
-    });
+    // await BackgroundRunner.updateNotification({
+    //   taskDesc: `Steps ${i}`,
+    //   color: "#000000",
+    // });
     await sleep(1000);
   }
 
@@ -65,8 +66,8 @@ export default function Assistant() {
 
   const onPressSchedule = async () => {
     try {
-      const hour = 17; // 7 PM
-      const minute = 57;
+      const hour = 12; // 7 PM
+      const minute = 1;
 
       await BackgroundRunner.scheduleDaily(hour, minute, optionForSchedule);
 

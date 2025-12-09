@@ -3,42 +3,54 @@ package expo.modules.backgroundrunner
 import android.content.Intent
 import android.util.Log
 import com.facebook.react.HeadlessJsTaskService
-import com.facebook.react.jstasks.HeadlessJsTaskConfig
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.jstasks.HeadlessJsTaskConfig
 
 class BackgroundRunnerTaskService : HeadlessJsTaskService() {
 
-  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    try {
-      val options = intent?.getSerializableMap("options") ?: hashMapOf()
-      val params = options["parameters"] as? Map<String, Any> ?: emptyMap()
-
-      Log.d("BGTaskService", "onStartCommand params: $params")
-      BackgroundEventEmitter.fireExecuteEvent(
-        mapOf("parameters" to params)
-      )
-
-    } catch (e: Exception) {
-      Log.e("BGTaskService", "Failed to emit event: ${e.message}")
+    companion object {
+        private const val TAG = "BGTaskService"
+        private const val TASK_NAME = "BackgroundRunnerTask"
+        private const val TIMEOUT = 60000
     }
 
-    return super.onStartCommand(intent, flags, startId)
-  }
+    /** Safe param extractor */
+    private fun extractParams(intent: Intent?): Map<String, Any> {
+        val options = intent?.getSerializableMap("options") ?: emptyMap<String, Any>()
+        return options["parameters"] as? Map<String, Any> ?: emptyMap()
+    }
 
-  override fun getTaskConfig(intent: Intent?): HeadlessJsTaskConfig {
-    val options = intent?.getSerializableMap("options") ?: hashMapOf()
-    val params = options["parameters"] as? Map<String, Any> ?: emptyMap()
-    Log.d("BGTaskService", "getTaskConfig params: $params")
+    /** Foreground/background event-based handler */
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return try {
+            val params = extractParams(intent)
+            Log.d(TAG, "onStartCommand params: $params")
 
-    val jsParams = Arguments.makeNativeMap(
-      mapOf("parameters" to params)
-    )
+            BackgroundEventEmitter.fireExecuteEvent(
+                mapOf("parameters" to params)
+            )
 
-    return HeadlessJsTaskConfig(
-      "BackgroundRunnerTask",
-      jsParams,
-      60000,
-      true
-    )
-  }
+            super.onStartCommand(intent, flags, startId)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to emit event: ${e.message}")
+            super.onStartCommand(intent, flags, startId)
+        }
+    }
+
+    /** Kill-mode → Headless JS handler */
+    override fun getTaskConfig(intent: Intent?): HeadlessJsTaskConfig {
+        val params = extractParams(intent)
+        Log.d(TAG, "getTaskConfig params: $params")
+
+        val jsParams = Arguments.makeNativeMap(
+            mapOf("parameters" to params)
+        )
+
+        return HeadlessJsTaskConfig(
+            TASK_NAME,
+            jsParams,
+            TIMEOUT.toLong(),
+            true // allow in foreground too
+        )
+    }
 }

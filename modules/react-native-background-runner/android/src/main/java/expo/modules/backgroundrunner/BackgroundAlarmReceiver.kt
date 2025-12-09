@@ -17,15 +17,16 @@ class BackgroundAlarmReceiver : BroadcastReceiver() {
     if (context == null || intent == null) return
 
     try {
-      // Ensure channel exists before starting any foreground service
+      val options = intent.getSerializableMap("options")
+
+      // Ensure notification channel before service starts
       BackgroundNotificationController.ensureChannel(context)
 
-      val optionsMap = intent.getSerializableMap("options")
-      val serviceIntent = Intent(context, BackgroundRunnerService::class.java)
-      if (optionsMap != null) serviceIntent.putExtra("options", optionsMap)
-
-      // Mark that this start came from alarm (optional)
-      serviceIntent.putExtra("fromAlarm", true)
+      // Start foreground service
+      val serviceIntent = Intent(context, BackgroundRunnerService::class.java).apply {
+        if (options != null) putExtra("options", options)
+        putExtra("fromAlarm", true)
+      }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         context.startForegroundService(serviceIntent)
@@ -33,36 +34,42 @@ class BackgroundAlarmReceiver : BroadcastReceiver() {
         context.startService(serviceIntent)
       }
 
-      val hour = intent.getIntExtra("hour", -1)
-      val minute = intent.getIntExtra("minute", -1)
-
-      if (hour >= 0 && minute >= 0) {
-        val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        val next = Calendar.getInstance().apply {
-          add(Calendar.DATE, 1)
-          set(Calendar.HOUR_OF_DAY, hour)
-          set(Calendar.MINUTE, minute)
-          set(Calendar.SECOND, 0)
-        }
-
-        val pi = PendingIntent.getBroadcast(
-          context,
-          9999,
-          intent,
-          PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-          am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, next.timeInMillis, pi)
-        } else {
-          am.setExact(AlarmManager.RTC_WAKEUP, next.timeInMillis, pi)
-        }
-      }
+      // Reschedule next day
+      scheduleNextDay(context, intent)
 
     } catch (e: Exception) {
       Log.e("BGAlarmReceiver", "Failed: ${e.message}")
     }
+  }
+
+  private fun scheduleNextDay(context: Context, originalIntent: Intent) {
+    val hour = originalIntent.getIntExtra("hour", -1)
+    val minute = originalIntent.getIntExtra("minute", -1)
+    if (hour < 0 || minute < 0) return
+
+    val cal = Calendar.getInstance().apply {
+      add(Calendar.DATE, 1)
+      set(Calendar.HOUR_OF_DAY, hour)
+      set(Calendar.MINUTE, minute)
+      set(Calendar.SECOND, 0)
+    }
+
+    val alarmIntent = PendingIntent.getBroadcast(
+      context,
+      9999,
+      originalIntent,
+      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.timeInMillis, alarmIntent)
+    } else {
+      alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.timeInMillis, alarmIntent)
+    }
+
+    Log.d("BGAlarmReceiver", "Next alarm set for: $hour:$minute tomorrow")
   }
 }
 

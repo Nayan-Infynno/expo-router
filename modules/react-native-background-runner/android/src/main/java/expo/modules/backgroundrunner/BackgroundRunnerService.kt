@@ -1,15 +1,9 @@
 package expo.modules.backgroundrunner
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
-import androidx.core.app.NotificationCompat
 
 class BackgroundRunnerService : Service() {
 
@@ -17,24 +11,33 @@ class BackgroundRunnerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
-            val options =
-                intent?.getSerializableMap("options") ?: BackgroundStorage.lastOptions ?: hashMapOf()
 
-            BackgroundStorage.lastOptions = options
+            // ---- GET OPTIONS SAFELY ----
+            val options = intent?.getSerializableMap("options")
+                ?: BackgroundStorage.lastOptions
+                ?: hashMapOf()
 
+            BackgroundStorage.save(options)
 
-            val existingNotification =
-                BackgroundNotificationController.buildNotification(this, options)
-
-            startForeground(1, existingNotification)
-
+            // ---- ALWAYS CREATE CHANNEL FIRST ----
             BackgroundNotificationController.ensureChannel(this)
 
-            BackgroundNotificationController.startForegroundNotification(this, options)
+            // ---- ALWAYS BUILD + APPLY NOTIFICATION FIRST TIME ----
+            val notification =
+                BackgroundNotificationController.buildForegroundNotification(this, options)
 
-            // Start Headless JS Task service
-            val headlessIntent = Intent(applicationContext, BackgroundRunnerTaskService::class.java)
-            headlessIntent.putExtra("options", HashMap(options))
+            // ---- FOREGROUND SERVICE START ----
+            startForeground(
+                BackgroundNotificationController.NOTIFICATION_ID,
+                notification
+            )
+
+            // ---- START HEADLESS JS TASK ----
+            val headlessIntent =
+                Intent(applicationContext, BackgroundRunnerTaskService::class.java).apply {
+                    putExtra("options", HashMap(options))
+                }
+
             applicationContext.startService(headlessIntent)
 
         } catch (e: Exception) {
@@ -46,8 +49,7 @@ class BackgroundRunnerService : Service() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        val restartIntent = Intent("expo.backgroundrunner.RESTART")
-        sendBroadcast(restartIntent)
+        sendBroadcast(Intent("expo.backgroundrunner.RESTART"))
     }
 
     override fun onDestroy() {

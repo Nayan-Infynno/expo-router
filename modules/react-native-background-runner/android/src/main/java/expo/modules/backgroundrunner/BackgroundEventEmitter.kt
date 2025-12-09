@@ -5,57 +5,64 @@ import expo.modules.kotlin.modules.Module
 
 object BackgroundEventEmitter {
 
-    // Module reference (set via setModule)
     @Volatile
     private var moduleRef: Module? = null
 
-    private val pendingEvents: MutableList<Map<String, Any?>> = mutableListOf()
+    private val pendingEvents = mutableListOf<Map<String, Any?>>()
 
     /**
-     * Called by the native module when it's created/attached to JS.
-     * This will set module reference and flush any queued events.
+     * Attach JS module reference (called when module loads).
+     * Any pending events (queued when JS wasn't ready) are flushed immediately.
      */
     @Synchronized
-    fun setModule(m: Module?) {
-        try {
-            moduleRef = m
-            Log.d("BGEmitter", "Module set: $m | pending=${pendingEvents.size}")
-            // Flush queued events immediately
-            if (m != null && pendingEvents.isNotEmpty()) {
-                val copy = pendingEvents.toList()
-                pendingEvents.clear()
-                for (ev in copy) {
-                    try {
-                        m.sendEvent("onExecute", ev)
-                        Log.d("BGEmitter", "Flushed pending onExecute: $ev")
-                    } catch (ex: Exception) {
-                        Log.e("BGEmitter", "Flush send failed: ${ex.message}")
-                    }
-                }
+    fun setModule(module: Module?) {
+        moduleRef = module
+
+        Log.d("BGEmitter", "Module attached: $module | pending=${pendingEvents.size}")
+
+        if (module == null || pendingEvents.isEmpty()) return
+
+        // Flush all pending events
+        val events = pendingEvents.toList()
+        pendingEvents.clear()
+
+        events.forEach { event ->
+            try {
+                module.sendEvent("onExecute", event)
+                Log.d("BGEmitter", "Flushed pending event: $event")
+            } catch (e: Exception) {
+                Log.e("BGEmitter", "Failed sending pending event: ${e.message}")
             }
-        } catch (e: Exception) {
-            Log.e("BGEmitter", "setModule error: ${e.message}")
         }
     }
 
+    /**
+     * Fire event to JS. If JS module not available yet, event will be queued.
+     */
     fun fireExecuteEvent(data: Map<String, Any?>) {
-        try {
-            val m = moduleRef
-            Log.d("BGEmitter", "fireExecuteEvent moduleRef: $m")
-            if (m != null) {
-                m.sendEvent("onExecute", data)
-                Log.d("BGEmitter", "Sent onExecute to JS: $data")
-            } else {
-                // queue for later -- will be flushed in setModule()
-                pendingEvents.add(data)
-                Log.d("BGEmitter", "Queued onExecute (JS not ready): $data")
+        val module = moduleRef
+
+        if (module != null) {
+            try {
+                module.sendEvent("onExecute", data)
+                Log.d("BGEmitter", "Sent event to JS: $data")
+            } catch (e: Exception) {
+                Log.e("BGEmitter", "Send event failed: ${e.message}")
             }
-        } catch (e: Exception) {
-            Log.e("BGEmitter", "Failed to emit event: ${e.message}")
+            return
         }
+
+        // JS not ready → queue the event
+        synchronized(this) {
+            pendingEvents.add(data)
+        }
+
+        Log.d("BGEmitter", "JS not ready → queued event: $data")
     }
 
-    // Useful for tests/debugging
+    /**
+     * Clears all pending queued events. Useful for tests.
+     */
     @Synchronized
     fun clearPending() {
         pendingEvents.clear()

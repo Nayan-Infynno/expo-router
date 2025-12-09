@@ -1,97 +1,99 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:1:1-50:12
-INJECTED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:1:1-50:12
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:1:1-66:12
+INJECTED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:1:1-66:12
 	package
 		INJECTED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml
 	xmlns:tools
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:1:11-57
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:2:5-51
 	xmlns:android
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:2:5-63
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:1:11-69
 uses-permission#android.permission.FOREGROUND_SERVICE
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:4:3-75
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:3-75
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:4:20-72
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:20-72
 uses-permission#android.permission.FOREGROUND_SERVICE_DATA_SYNC
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:3-85
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:3-85
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:5:20-82
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:20-82
 uses-permission#android.permission.POST_NOTIFICATIONS
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:3-75
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:3-75
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:6:20-72
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:20-72
 uses-permission#android.permission.SCHEDULE_EXACT_ALARM
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:3-77
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:3-77
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:7:20-74
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:20-74
 uses-permission#android.permission.WAKE_LOCK
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:3-66
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:3-66
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:8:20-63
-uses-permission#android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:3-93
-	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:20-90
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:9:20-63
 uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
 ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:10:3-79
 	android:name
 		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:10:20-76
+uses-permission#android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:13:3-93
+	android:name
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:13:20-90
 application
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:13:3-49:17
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:15:3-65:17
 meta-data#expo.modules.backgroundrunner.NOTIFICATION_CHANNEL
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:14:5-16:53
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:18:5-20:53
 	android:value
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:16:9-50
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:20:9-50
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:15:9-74
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:19:9-74
 service#expo.modules.backgroundrunner.BackgroundRunnerService
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:18:5-23:52
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:25:5-30:54
 	android:enabled
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:20:7-29
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:27:9-31
 	android:exported
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:21:7-31
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:28:9-33
 	tools:ignore
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:23:7-49
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:30:9-51
 	android:foregroundServiceType
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:22:7-47
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:29:9-49
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:19:7-46
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:26:9-48
 service#expo.modules.backgroundrunner.BackgroundRunnerTaskService
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:25:5-28:34
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:33:5-36:36
 	android:enabled
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:27:7-29
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:35:9-31
 	android:exported
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:28:7-31
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:36:9-33
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:26:7-50
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:34:9-52
 receiver#expo.modules.backgroundrunner.BackgroundAlarmReceiver
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:30:5-33:33
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:42:5-45:35
 	android:enabled
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:32:7-29
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:44:9-31
 	android:exported
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:33:7-30
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:45:9-32
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:31:7-46
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:43:9-48
 receiver#expo.modules.backgroundrunner.BackgroundAutostartReceiver
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:35:5-47:16
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:48:5-63:16
+	android:enabled
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:50:9-31
 	android:exported
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:37:9-32
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:51:9-32
 	tools:ignore
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:38:9-40
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:52:9-40
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:36:9-52
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:49:9-52
 intent-filter#action:name:expo.backgroundrunner.RESTART
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:40:7-42:23
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:55:7-57:23
 action#expo.backgroundrunner.RESTART
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:41:9-64
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:56:9-64
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:41:17-61
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:56:17-61
 intent-filter#action:name:android.intent.action.BOOT_COMPLETED
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:44:7-46:23
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:60:7-62:23
 action#android.intent.action.BOOT_COMPLETED
-ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:45:9-71
+ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:61:9-71
 	android:name
-		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:45:17-68
+		ADDED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml:61:17-68
 uses-sdk
 INJECTED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/infynnosolutions/Documents/Projects/ExpoPilot/modules/react-native-background-runner/android/src/main/AndroidManifest.xml

@@ -13,34 +13,37 @@ import java.util.Calendar
 
 class ReactNativeBackgroundRunnerModule : Module() {
 
-  private var isServiceRunning: Boolean = false
+  private var isServiceRunning = false
 
   override fun definition() = ModuleDefinition {
     Name("ReactNativeBackgroundRunner")
     Events("onExecute")
 
     OnCreate {
-      // Set module into emitter (so that pending events get flushed)
       BackgroundEventEmitter.setModule(this@ReactNativeBackgroundRunnerModule)
     }
 
     // START SERVICE
     AsyncFunction("startNative") { options: Map<String, Any> ->
       val context = appContext.reactContext
-        ?: throw Exception("React context not available")
+        ?: throw IllegalStateException("ReactContext not available")
 
       val activity = appContext.currentActivity
-      // Notification Permission
+
+      // Notification permission check
       if (!NotificationPermissionHelper.hasPermission(context)) {
         NotificationPermissionHelper.requestPermission(activity)
         NotificationPermissionHelper.showPermissionToast(context)
         return@AsyncFunction false
       }
 
-      BackgroundStorage.lastOptions = options
+      BackgroundStorage.save(options)
+
+      // Ensure notification channel exists
+      BackgroundNotificationController.ensureChannel(context)
 
       val intent = Intent(context, BackgroundRunnerService::class.java)
-      intent.putExtra("options", HashMap(options))
+        .putExtra("options", HashMap(options))
 
       try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -48,53 +51,51 @@ class ReactNativeBackgroundRunnerModule : Module() {
         } else {
           context.startService(intent)
         }
-
         isServiceRunning = true
         true
-
       } catch (e: Exception) {
-        Log.e("BGRunner", "startNative failed: ${e.message}")
-        throw e
+        Log.e("BGRunner", "Failed to start service: ${e.message}")
+        false
       }
     }
 
-    // STOP
+    // STOP SERVICE
     AsyncFunction("stop") {
       val ctx = appContext.reactContext ?: return@AsyncFunction false
-      BackgroundStorage.lastOptions = null
       ctx.stopService(Intent(ctx, BackgroundRunnerService::class.java))
+      BackgroundStorage.clear()
       isServiceRunning = false
       true
     }
 
-    // schedule daily
+    // SCHEDULE DAILY SERVICE
     AsyncFunction("scheduleDaily") { hour: Int, minute: Int, options: Map<String, Any> ->
-      Log.d("BGRunner scheduleDaily", "hour: $hour, minute: $minute")
-      val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")
+      val ctx = appContext.reactContext
+        ?: throw IllegalStateException("ReactContext not available")
 
       val activity = appContext.currentActivity
-      // Notification Permission
+
       if (!NotificationPermissionHelper.hasPermission(ctx)) {
         NotificationPermissionHelper.requestPermission(activity)
         NotificationPermissionHelper.showPermissionToast(ctx)
         return@AsyncFunction false
       }
 
-      // Ensure channel exists BEFORE alarm fires (important)
       BackgroundNotificationController.ensureChannel(ctx)
 
       val alarmManager = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
       val intent = Intent(ctx, BackgroundAlarmReceiver::class.java)
-      intent.putExtra("options", HashMap(options))
-      intent.putExtra("hour", hour)
-      intent.putExtra("minute", minute)
+        .putExtra("options", HashMap(options))
+        .putExtra("hour", hour)
+        .putExtra("minute", minute)
 
       val pi = PendingIntent.getBroadcast(
         ctx, 9999, intent,
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
       )
 
-      val cal = Calendar.getInstance().apply {
+      val calendar = Calendar.getInstance().apply {
         timeInMillis = System.currentTimeMillis()
         set(Calendar.HOUR_OF_DAY, hour)
         set(Calendar.MINUTE, minute)
@@ -104,20 +105,28 @@ class ReactNativeBackgroundRunnerModule : Module() {
         }
       }
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pi)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pi)
       } else {
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pi)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pi)
       }
+
+      true
     }
 
+    // UPDATE NOTIFICATION
     AsyncFunction("updateNotification") { options: Map<String, Any> ->
-      BackgroundNotificationController.updateNotification(appContext.reactContext!!, options)
+      BackgroundNotificationController.updateNotification(
+        appContext.reactContext!!,
+        options
+      )
     }
 
+    // BATTERY OPTIMIZATION
     Function("isBatteryOptIgnored") {
-      val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")
-      BatteryOptimizationHelper.isIgnoringBatteryOptimizations(ctx)
+      BatteryOptimizationHelper.isIgnoringBatteryOptimizations(
+        appContext.reactContext!!
+      )
     }
 
     AsyncFunction("requestIgnoreBatteryOptimizations") {
@@ -126,34 +135,17 @@ class ReactNativeBackgroundRunnerModule : Module() {
         BatteryOptimizationHelper.requestIgnoreBatteryOptimizations(activity)
         true
       } else {
-        try {
-          BatteryOptimizationHelper.openAutoStartSettings(appContext.reactContext!!)
-        } catch (_: Exception) {}
+        BatteryOptimizationHelper.openAutoStartSettings(appContext.reactContext!!)
         false
       }
     }
 
     Function("openAutoStartSettings") {
-      val ctx = appContext.reactContext ?: throw IllegalStateException("ReactContext not attached")
-      BatteryOptimizationHelper.openAutoStartSettings(ctx)
+      BatteryOptimizationHelper.openAutoStartSettings(appContext.reactContext!!)
     }
 
     Function("isRunning") {
       isServiceRunning
-    }
-  }
-
-  private fun startServiceSafe(context: Context, intent: Intent) {
-    try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        ContextCompat.startForegroundService(context, intent)
-      } else {
-        context.startService(intent)
-      }
-      isServiceRunning = true
-    } catch (e: Exception) {
-      Log.e("BGRunner", "Service start failed: ${e.message}")
-      throw e
     }
   }
 }
