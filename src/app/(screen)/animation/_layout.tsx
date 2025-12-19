@@ -4,7 +4,7 @@ import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { useColorScheme } from "react-native";
 
-const ScreenLayout = () => {
+const AnimationLayout = () => {
   const router = useRouter();
   const colorScheme = useColorScheme();
   const headerBackgroundColor = useThemeColor({}, "backgroundColor");
@@ -40,50 +40,31 @@ const ScreenLayout = () => {
       }}
     >
       <Stack.Screen
-        name="list/index"
+        name="index"
         options={{
-          title: "List",
+          title: "Contact List",
         }}
       />
       <Stack.Screen
-        name="list/[id]"
+        name="animatedBar"
         options={{
-          title: "List Details",
+          title: "Animated Bar",
         }}
       />
       <Stack.Screen
-        name="product/index"
-        options={{
-          title: "Product Listing",
-        }}
-      />
-      <Stack.Screen
-        name="product/[id]"
-        options={{
-          title: "Product Details",
-        }}
-      />
-      <Stack.Screen
-        name="product/[...rest]"
-        options={{
-          title: "Catch All Product Details",
-        }}
-      />
-      <Stack.Screen
-        name="animation"
+        name="scrollViewDemo"
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name="+not-found/index"
+        name="Menu"
         options={{
           headerShown: false,
-          title: "File Not Found",
         }}
       />
     </Stack>
   );
 };
 
-export default ScreenLayout;
+export default AnimationLayout;

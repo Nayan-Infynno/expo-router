@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/src/components/themed-text";
 import { ThemedView } from "@/src/components/themed-view";
@@ -8,8 +8,10 @@ import { Link } from "expo-router";
 const Home = () => {
   return (
     <ThemedView style={styles.container}>
-      <Link href="/(screen)/list">
-        <ThemedText>List listing & Slot Layout</ThemedText>
+      <Link href="/(screen)/list" asChild>
+        <TouchableOpacity>
+          <ThemedText>List listing & Slot Layout</ThemedText>
+        </TouchableOpacity>
       </Link>
       <Link href="/(screen)/product">
         <ThemedText>Product listing (id & catch all)</ThemedText>

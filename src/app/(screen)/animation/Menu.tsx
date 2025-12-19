@@ -1,0 +1,130 @@
+import MenuView from "@/src/components/menuView";
+import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
+import { BlurView } from "expo-blur";
+import { Image } from "expo-image";
+import React from "react";
+import {
+  Platform,
+  StyleSheet,
+  ToastAndroid,
+  View,
+  useColorScheme,
+} from "react-native";
+
+const actions = [
+  {
+    id: "mute",
+    title: "Mute",
+    icon: (props) => <Ionicons name="volume-high-outline" {...props} />,
+    subActions: [
+      {
+        id: "disable",
+        title: "Disable sound",
+        icon: (props) => <Ionicons name="musical-notes-outline" {...props} />,
+      },
+      {
+        id: "for",
+        title: "Mute for",
+        icon: (props) => (
+          <Ionicons name="notifications-off-outline" {...props} />
+        ),
+      },
+      {
+        id: "customize",
+        title: "Customize",
+        icon: (props) => <Ionicons name="options-outline" {...props} />,
+      },
+      {
+        id: "forever",
+        title: "Mute forever",
+        destructive: true,
+        icon: (props) => <Ionicons name="volume-mute-outline" {...props} />,
+      },
+    ],
+  },
+  {
+    id: "video",
+    title: "Video Call",
+    icon: (props) => <Ionicons name="videocam-outline" {...props} />,
+  },
+  {
+    id: "search",
+    title: "Search",
+    icon: (props) => <Ionicons name="search-outline" {...props} />,
+  },
+  {
+    id: "wallpaper",
+    title: "Change Wallpaper",
+    icon: (props) => <Ionicons name="image-outline" {...props} />,
+  },
+  {
+    id: "clearHistory",
+    title: "Clear History",
+    icon: (props) => <MaterialCommunityIcons name="broom" {...props} />,
+  },
+  {
+    id: "delete",
+    title: "Delete chat",
+    // destructive: true,
+    icon: (props) => <Ionicons name="trash-outline" {...props} />,
+  },
+];
+
+const Menu = () => {
+  const tint = useColorScheme();
+  const theme = useTheme();
+
+  const onPressAction = (item: any) => {
+    if (Platform.OS === "android") {
+      ToastAndroid.show(item.title, ToastAndroid.BOTTOM);
+    } else {
+      alert(item.title);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Image
+        source={{
+          uri: "https://images.unsplash.com/photo-1577398628395-4ebd1f36731b?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        }}
+        placeholder={"eVRU$[XnXTn%ae?^n4i^jsbH9te.jZbbf6;1b^bvjFjZGHiwi_f5bI"}
+        style={StyleSheet.absoluteFill}
+        transition={300}
+        contentFit="cover"
+      />
+      <MenuView actions={actions} onPressAction={onPressAction}>
+        <BlurView
+          tint={tint === "light" ? "systemMaterialLight" : "systemMaterialDark"}
+          intensity={100}
+          style={styles.blurView}
+        >
+          <Entypo
+            name="dots-three-horizontal"
+            size={24}
+            color={theme.colors.text}
+          />
+        </BlurView>
+      </MenuView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  blurView: {
+    width: 50,
+    aspectRatio: 1,
+    borderRadius: 25,
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
+export default Menu;
