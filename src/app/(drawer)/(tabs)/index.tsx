@@ -17,6 +17,9 @@ const Home = () => {
       <Link href="/profile/john">
         <ThemedText>John Profile (Custom Not found)</ThemedText>
       </Link>
+      <Link href="/todo">
+        <ThemedText>Todo</ThemedText>
+      </Link>
     </ThemedView>
   );
 };

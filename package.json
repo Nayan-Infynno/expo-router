@@ -19,9 +19,11 @@
     "easStagingBuild": "eas build --profile android --platform stagingBuild",
     "easProductionBuild": "eas build --profile android --platform productionBuild",
     "easProductionBundle": "eas build --profile android --platform productionBundle",
-    "startTanner": "npx expo start --dev-client --tunnel --clear"
+    "startTanner": "npx expo start --dev-client --tunnel --clear",
+    "prewidget": "EXPO_NO_GIT_STATUS=1 npx expo prebuild --template ./node_modules/@bacons/apple-targets/prebuild-blank.tgz --clean"
   },
   "dependencies": {
+    "@bacons/apple-targets": "^3.0.6",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-vector-icons/material-design-icons": "^12.4.0",

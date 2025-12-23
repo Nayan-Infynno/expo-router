@@ -11,6 +11,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.krunalinfynno.ExpoPilot",
+      "appleTeamId": "W6KRHU544G",
+      "entitlements": {
+        "com.apple.security.application-groups": [
+          "group.krunalinfynno.ExpoPilot"
+        ]
+      },
       "infoPlist": {
         "UIViewControllerBasedStatusBarAppearance": true,
         "UIDesignRequiresCompatibility": true
@@ -49,7 +55,8 @@
         {
           "root": "./src/app"
         }
-      ]
+      ],
+      "@bacons/apple-targets"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -58,7 +65,24 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "5377f7c7-0a06-4040-9199-b13423b31835"
+        "projectId": "5377f7c7-0a06-4040-9199-b13423b31835",
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "bundleIdentifier": "com.krunalinfynno.ExpoPilot.widget",
+                  "targetName": "widget",
+                  "entitlements": {
+                    "com.apple.security.application-groups": [
+                      "group.krunalinfynno.ExpoPilot"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
       }
     }
   }

@@ -70,6 +70,12 @@ const ScreenLayout = () => {
         }}
       />
       <Stack.Screen
+        name="todo/index"
+        options={{
+          title: "Todos",
+        }}
+      />
+      <Stack.Screen
         name="+not-found/index"
         options={{
           headerShown: false,
