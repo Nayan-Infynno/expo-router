@@ -1,11 +1,14 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/src/components/themed-text";
 import { ThemedView } from "@/src/components/themed-view";
-import { Link } from "expo-router";
+import { HelloWidget } from "@/src/widget/index.android";
+import { Link, useRouter } from "expo-router";
+import { WidgetPreview } from "react-native-android-widget";
 
 const Home = () => {
+  const navigation = useRouter();
   return (
     <ThemedView style={styles.container}>
       <Link href="/(screen)/list">
@@ -14,9 +17,17 @@ const Home = () => {
       <Link href="/(screen)/product">
         <ThemedText>Product listing (id & catch all)</ThemedText>
       </Link>
-      <Link href="/profile/john">
+      <Pressable
+        onPress={() => navigation.navigate("/(drawer)/(tabs)/profile")}
+      >
         <ThemedText>John Profile (Custom Not found)</ThemedText>
-      </Link>
+      </Pressable>
+
+      <WidgetPreview
+        renderWidget={() => <HelloWidget />}
+        width={320}
+        height={200}
+      />
     </ThemedView>
   );
 };
